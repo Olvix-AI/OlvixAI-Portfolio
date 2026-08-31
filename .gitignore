@@ -1,0 +1,40 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+# Unscrubbed source material for docs/.
+# This repo is public. The screenshots include applicant names, contact details, resumes
+# and health readings (HRXpert's Applicants/Resume pages, the PowerUp app screens), and
+# the .docx case studies name clients and individuals. The .md files in docs/ are the
+# scrubbed, publishable versions and ARE committed.
+# To publish any of the images: scrub them, convert to WebP, and put them in public/.
+docs/**/*.png
+docs/**/*.jpg
+docs/**/*.jpeg
+docs/*.docx
+
+# Claude Code per-machine settings (local by convention)
+.claude/settings.local.json
