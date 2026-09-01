@@ -9,6 +9,8 @@ const deployments = [
   { platform: "Azure", role: "Vision + OpenAI", project: "PowerUp" },
   { platform: "Vercel", role: "Web front ends", project: "KairosAI" },
   { platform: "Kubernetes", role: "Blue/green rollouts", project: "Decks" },
+  { platform: "Supabase", role: "Managed Postgres", project: "Trading Ops" },
+  { platform: "RunPod", role: "Cloud GPU training", project: "EpochsLab" },
   { platform: "GitHub Actions", role: "CI/CD on push", project: "All" },
   { platform: "App Store · Play", role: "Release pipelines", project: "PowerUp" },
 ];

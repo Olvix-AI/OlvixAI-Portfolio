@@ -39,12 +39,14 @@ work**, and **objection handling** (FAQ + ownership + a real contact page).
 
 ```
 /                        Home — 9 content sections, below
-/portfolio               The work                      → Portfolio-Copy.md
-/portfolio/powerup       ┐
-/portfolio/agentic-decks │ one [slug] template,
-/portfolio/hrxpert       │ four projects
-/portfolio/kairosai      ┘
-/contact                 Get a quote                   → Contact-Copy.md
+/portfolio                    The work                 → Portfolio-Copy.md
+/portfolio/powerup            ┐
+/portfolio/trading-operations │
+/portfolio/agentic-decks      │ one [slug] template,
+/portfolio/epochslab          │ six projects
+/portfolio/hrxpert            │
+/portfolio/kairosai           ┘
+/contact                      Get a quote              → Contact-Copy.md
 
 Later, if worth it:
 /about                   The team, at length
@@ -115,12 +117,23 @@ procurement teams verify them. §9 is rewritten around ownership and practices y
 actually demonstrate — which sells better to this buyer anyway. Same problem, smaller, in
 the infrastructure section's "17 data centers / 99.99% uptime SLA" — rewritten in §4.
 
-**2. Only one of the four case studies is client work.** PowerUp is a real commercial
-engagement. HRXpert and KairosAI are academic capstones built to production standard, and
-Agentic Decks is production work a team member did inside their employer's product. Every
-mention below carries its true label. Don't quietly drop those labels to make the portfolio
-look more commercial — a prospect who finds out later discounts the entire site, and the
-work is strong enough to stand up labelled honestly.
+**2. Two of the six case studies are client work.** PowerUp and Trading Operations are
+real commercial engagements. Agentic Decks is production work a team member did inside
+their employer's product, EpochsLab is OlvixAI's own product and still in development, and
+HRXpert and KairosAI are academic capstones built to production standard. Every mention
+carries its true label. Don't quietly drop those labels to make the portfolio look more
+commercial — a prospect who finds out later discounts the entire site, and the work is
+strong enough to stand up labelled honestly.
+
+**3. The portfolio now demonstrates an audience the site doesn't claim.**
+`OlvixAI-Offering.md` says the buyers are funded startups building an AI product and SaaS
+companies adding AI to one. Trading Operations is neither: it's an established
+import/export trading business whose operations ran on spreadsheets. That's arguably the
+most commercially interesting segment in the portfolio — there are far more of those
+companies than there are funded AI startups — but the Services section (§3) doesn't
+mention them, so the site's best proof point sits outside its stated market. Broadening
+the closing line of §3 is a one-sentence change; whether to reposition is a business call,
+so it's flagged rather than done.
 
 ---
 
@@ -392,6 +405,17 @@ Panel label: `Edge Network` → **`Where we deploy`**
 Repurposed as a teaser for `/portfolio`. The existing fields map cleanly: `quote` → the
 project's one-line pitch, `author` → project name, `role` → engagement type, `company` →
 domain, `metric` → headline result.
+
+> **As built, this section reads from `lib/projects.ts` rather than a local array.** Each
+> project carries a `teaser: { pitch, engagement, domain, metric }`, and the name, slug
+> and href come from the project itself. The literal objects below are the original spec
+> and are kept for the wording; the shipped data lives in `lib/projects.ts`, which is
+> where edits go.
+>
+> Two consequences of that, both intentional: the section now rotates through **all six**
+> projects (`01 / 06`, six dots) and picks up any project added or pulled with no edit
+> here; and it can never link to a slug that has stopped existing. If six rotations feels
+> long at 5s each, the fix is a `featured` flag on `Project`, not a second hardcoded list.
 
 **⚠ Needs a code change (small):**
 - The blockquote wraps text in literal `"` marks — remove them.

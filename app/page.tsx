@@ -10,6 +10,7 @@ import { SecuritySection } from "@/components/landing/security-section";
 import { FaqSection } from "@/components/landing/faq-section";
 import { CtaSection } from "@/components/landing/cta-section";
 import { FooterSection } from "@/components/landing/footer-section";
+import { projectLinks, projectTeasers } from "@/lib/projects";
 
 // The order is a sales argument, not a feature list: what we do -> why us -> proof ->
 // who we are -> how it goes -> can you do my thing -> what I keep -> what it costs ->
@@ -28,14 +29,14 @@ export default function Home() {
       <HeroSection />
       <ServicesSection />
       <InfrastructureSection />
-      <TestimonialsSection />
+      <TestimonialsSection projects={projectTeasers} />
       <FeaturesSection />
       <HowItWorksSection />
       <IntegrationsSection />
       <SecuritySection />
       <FaqSection />
       <CtaSection />
-      <FooterSection />
+      <FooterSection workLinks={projectLinks} />
     </main>
   );
 }

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import type { Project } from "@/lib/projects";
+import type { ProjectCardItem } from "@/lib/projects";
 import { useReveal } from "./reveal";
 
 const FOCUS_RING =
@@ -15,7 +15,7 @@ const FOCUS_RING =
  * The first tag is always the project's true type (contract engagement, production
  * feature, in-house build). It leads the tag row for that reason.
  */
-export function ProjectCard({ project, index }: { project: Project; index: number }) {
+export function ProjectCard({ project, index }: { project: ProjectCardItem; index: number }) {
   const { ref, isVisible } = useReveal<HTMLLIElement>();
 
   return (

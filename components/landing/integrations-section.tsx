@@ -16,6 +16,7 @@ const capabilities = [
 ];
 
 const stack = [
+  { name: "Anthropic Claude", category: "Drafting · extraction" },
   { name: "OpenAI", category: "GPT · Whisper · TTS" },
   { name: "Azure OpenAI", category: "Enterprise inference" },
   { name: "LangGraph", category: "Agent orchestration" },

@@ -5,7 +5,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { projects } from "@/lib/projects";
+import type { ProjectTeaserItem } from "@/lib/projects";
 
 const buildsWith = [
   "Voice AI",
@@ -20,7 +20,7 @@ const buildsWith = [
   "Browser extensions",
 ];
 
-export function TestimonialsSection() {
+export function TestimonialsSection({ projects }: { projects: ProjectTeaserItem[] }) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isPaused, setIsPaused] = useState(false);

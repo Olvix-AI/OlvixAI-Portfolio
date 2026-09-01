@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import type { Project } from "@/lib/projects";
+import type { ProjectNavItem } from "@/lib/projects";
 import { useReveal } from "./reveal";
 
 const FOCUS_RING =
@@ -12,7 +12,7 @@ const FOCUS_RING =
  * Prev/next between projects, then one quiet line to /contact. Someone who has just
  * read two thousand words does not need a full CTA block; they need a link.
  */
-export function ProjectNav({ prev, next }: { prev: Project; next: Project }) {
+export function ProjectNav({ prev, next }: { prev: ProjectNavItem; next: ProjectNavItem }) {
   const { ref, isVisible } = useReveal<HTMLElement>();
 
   return (

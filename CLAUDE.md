@@ -14,7 +14,7 @@ through those docs first.
 - `docs/OlvixAI-Offering.md` — what the business actually sells
 - `docs/Homepage-Copy.md` — site architecture + all home page copy, and *why* each
   section exists (including which template sections were deleted and what replaced them)
-- `docs/Portfolio-Copy.md` — `/portfolio` and the four case studies
+- `docs/Portfolio-Copy.md` — `/portfolio`, the six case studies, and their open flags
 - `docs/Contact-Copy.md` — `/contact`
 
 Two content rules that are deliberate, not accidental — don't "fix" them:
@@ -25,9 +25,16 @@ Two content rules that are deliberate, not accidental — don't "fix" them:
    that looks like a testimonial carousel is a *work* teaser. Don't populate it with
    invented quotes.
 
-Of the four case studies, **only PowerUp is commercial client work.** HRXpert and
-KairosAI are academic capstones; Agentic Decks is an employer's production feature. Each
-page carries its true `Type` label as `meta[0]` — that labelling is intentional.
+Of the six case studies, **two are commercial client work — PowerUp and Trading
+Operations.** Agentic Decks is an employer's production feature, EpochsLab is OlvixAI's
+own product (still in development), and HRXpert and KairosAI are academic capstones. Each
+page carries its true `Type` label as `meta[0]` — that labelling is intentional and must
+not be softened to make the portfolio look more commercial.
+
+Two open flags on Trading Operations, both recorded in `docs/Portfolio-Copy.md` §F:
+the page names the client (SMC Group), which the site's own ownership section promises not
+to do without written sign-off; and the source case study's live URL is a raw IP over
+plain HTTP, deliberately **not** published.
 
 **This is web only. It is not React Native.** See "Unused dependencies" below.
 
@@ -54,7 +61,7 @@ app/
   globals.css           # THE stylesheet — design tokens, @theme, custom utilities
   portfolio/
     page.tsx            # the work index
-    [slug]/page.tsx     # one template, four case studies, generateStaticParams
+    [slug]/page.tsx     # one template, six case studies, generateStaticParams
   contact/page.tsx      # server shell -> <ContactSection /> + <ContactFaq />
 components/
   landing/              # the landing page — one file per section
@@ -73,12 +80,19 @@ docs/                   # the copy source of truth — see "What this is"
 `app/page.tsx` is a flat list of sections. To add/remove/reorder one, edit that file and
 add a matching file in `components/landing/`.
 
-**`lib/projects.ts` is the single source of truth for the four projects.** The index,
-the four case-study pages, and the home page "Selected work" teaser all read from it.
-Deleting a project object removes it from all three — prev/next wraps automatically, and
-the only manual follow-up is renumbering `number` on the remaining projects. (This
-matters: publishing Agentic Decks is still pending an NDA check.) `card` and `teaser`
-hold deliberately different copy for the index card and the home teaser respectively.
+**`lib/projects.ts` is the single source of truth for the six projects.** The index, the
+six case-study pages, the home page "Selected work" teaser and the footer's Work column
+all read from it. Deleting a project object removes it from all four — prev/next wraps
+automatically, and the only manual follow-up is renumbering `number` on the remaining
+projects. (This matters: publishing Agentic Decks is still pending an NDA check.) `card`
+and `teaser` hold deliberately different copy for the index card and the home teaser
+respectively.
+
+It is also canonical for **page prose**. `docs/Portfolio-Copy.md` holds the full text for
+PowerUp, Agentic Decks, HRXpert and KairosAI for historical reasons, but Trading
+Operations and EpochsLab were authored directly in `lib/projects.ts`, and the doc records
+only their reasoning and flags. Edit prose in `lib/projects.ts`; don't reintroduce a
+second copy of it.
 
 Path alias: `@/*` -> repo root (e.g. `@/components/ui/button`).
 
@@ -175,7 +189,7 @@ Every file in `components/landing/` follows the same shape. Match it when adding
 - `html` carries `scroll-padding-top: 6rem` so anchor jumps don't land the target, and
   its focus ring, underneath the fixed nav.
 - Screenshot galleries render from a `screenshots: []` array in `lib/projects.ts` that
-  is **intentionally empty for all four projects**. The assets in `docs/` contain real
+  is **intentionally empty for every project**. The assets in `docs/` contain real
   names, contact details and health data and need a manual scrub (plus WebP conversion,
   since `images.unoptimized: true`) before they go in `public/`.
 - **Nothing nondeterministic may be rendered during SSR.** Two hydration mismatches

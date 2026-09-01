@@ -10,10 +10,14 @@ import { AnimatedSphere } from "./animated-sphere";
 
 const words = ["ships", "scales", "works", "lasts"];
 
+// Every figure here is verifiable from the case study it names. Nothing rounded up,
+// nothing from a project that cannot back it.
 const stats = [
   { value: "0.895", label: "agreement with a human recruiter", company: "HRXPERT" },
-  { value: "<320ms", label: "P95 API latency at 4x load", company: "HRXPERT" },
   { value: "2", label: "app stores, shipped and live", company: "POWERUP" },
+  { value: "15/15", label: "adversarial RBAC checks passed", company: "TRADING OPS" },
+  { value: "<320ms", label: "P95 API latency at 4x load", company: "HRXPERT" },
+  { value: "18", label: "step order lifecycle, verified live", company: "TRADING OPS" },
   { value: "8 mo", label: "web rebuild plus native app", company: "POWERUP" },
 ];
 

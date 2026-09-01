@@ -1,5 +1,5 @@
 /**
- * Portfolio data — the four OlvixAI case studies.
+ * Portfolio data — the six OlvixAI case studies.
  *
  * All copy here is verbatim from `docs/Portfolio-Copy.md` (§A–§E). The pages in
  * `app/portfolio/` are one index plus one `[slug]` template driven entirely by this
@@ -354,10 +354,224 @@ export const projects: Project[] = [
     screenshots: [],
   },
 
+  // ─────────────────────────────────────────────── §F · Trading Operations ──
+  {
+    slug: "trading-operations",
+    number: "02",
+    name: "Trading Operations",
+    teaser: {
+      pitch:
+        "An import/export trading company's entire operation — enquiry to final payment, across three legal entities — with AI drafting the paperwork and staff approving every decision.",
+      engagement: "Client engagement",
+      domain: "B2B operations",
+      metric: "Full lifecycle verified live",
+    },
+    eyebrow: "Client engagement",
+    oneLiner:
+      "An operations platform that runs an import/export trading business from customer enquiry to final payment, with AI drafting the repetitive paperwork and staff approving every decision.",
+    pageTitle: "Trading Operations — OlvixAI",
+    metaDescription:
+      "An operations automation platform for an import/export trading company: an 18-step order lifecycle across three legal entities, with AI-assisted drafting and vendor quote extraction under human approval.",
+    card: {
+      tags: ["Client engagement", "B2B operations", "Web app + AI extraction"],
+      pitch:
+        "An import/export trading business ran on spreadsheets, email and a status sheet somebody updated by hand every day. We replaced it with a guided 18-step order lifecycle across three legal entities — RFQs, quote comparison, purchase orders, shipping documents, GST invoicing and payment reconciliation — with AI drafting the repetitive paperwork and pulling line items out of vendor quotes, and staff approving every decision.",
+      metric: "Full enquiry-to-paid lifecycle verified live",
+      detail: "Mid-2026 · 7-person ops team, 3 entities",
+    },
+    meta: [
+      { label: "Type", value: "Client project — SMC Group" },
+      {
+        label: "Domain",
+        value: "Import/export trading · industrial and defence buyers",
+      },
+      {
+        label: "Timeframe",
+        value: "Built and verified mid-2026; live end-to-end verification July 2026",
+      },
+      {
+        label: "Team",
+        value:
+          "Delivered to a 7-person shared operations team running three import/export entities",
+      },
+      { label: "Status", value: "Verified live end to end" },
+    ],
+    challenge: [
+      "SMC Group imports industrial and technical goods from international suppliers and resells them to industrial and defence customers. Every deal is operationally heavy: RFQs out to vendors, quote comparison across currencies, purchase orders, shipping documents, goods receipt, delivery challans, GST invoicing, payment reconciliation — routinely with partial shipments and partial payments landing against the same order.",
+      "All of it ran on spreadsheets, email, and a status sheet somebody updated by hand every day. That meant slow handoffs between sales, procurement, warehouse and accounts, the same documents retyped for every deal, and nowhere to look to find out where an order actually stood.",
+      "The multiplier was three companies sharing one team. The same seven people operate three legal entities, which turns every pricing decision, every document number and every cross-company lookup into somewhere an error can hide — and a manual process gives you no way to find it afterwards.",
+    ],
+    role: [
+      "End-to-end delivery: requirements, architecture, backend, frontend, AI integration, testing and deployment documentation.",
+      "That started with translating the client's real trading process and their actual document formats into a formal spec and capability matrix — the part that decides whether software like this fits the business, or the business has to bend around the software. From there: the modular monolith backend with capability-based RBAC and per-company data isolation, the React SPA carrying role-based dashboards and the order-detail workflow, the Claude integration for drafting and extraction, deterministic PDF generation and GST invoicing, and live end-to-end verification across all eighteen steps.",
+    ],
+    built: {
+      groups: [
+        {
+          title: "The order lifecycle",
+          lede: "one screen, eighteen steps, and only the next valid action visible.",
+          items: [
+            {
+              title: "18-step order lifecycle",
+              body: "enquiry through vendor sourcing, procurement, shipment, delivery, invoicing and payment, on a single order-detail screen. Each role sees only the action that is theirs and next: Sales, Purchase, Owner, Sales, Purchase, Warehouse, Accounts, then automatic reconciliation.",
+            },
+            {
+              title: "Quote comparison",
+              body: "vendors ranked by effective cost — price adjusted for payment terms — with a caution flag when the comparison crosses currencies, and an Owner approval gate before any procurement spend.",
+            },
+            {
+              title: "Multi-company operations",
+              body: "three entities running in isolation, a consolidated view for Owner and Admin, and gap-free sequential document numbering per company.",
+            },
+            {
+              title: "Live status board",
+              body: "replaces the manual daily-update sheet, refreshing roughly every thirty seconds.",
+            },
+            {
+              title: "Receivables and reporting",
+              body: "partial payments, CRV-gated payment release, aging tiers, and revenue, GST and margin reports exportable to PDF and Excel.",
+            },
+            {
+              title: "Full audit trail",
+              body: "every state change logged with who, what, when, and the before and after. Nothing is hard-deleted.",
+            },
+          ],
+        },
+        {
+          title: "Where the AI sits",
+          lede: "three touchpoints, all of them drafting rather than deciding.",
+          intro: [
+            "Claude writes vendor RFQ cover letters, extracts structured line items out of vendor quote documents with confidence flags on low-certainty fields, and drafts payment reminders. Nothing is sent or finalised without a person approving it.",
+            "The numbers that matter are never model output. Vendor RFQ, Commercial Offer, customer and vendor purchase orders, GRN, Delivery Challan and the GST Sales Tax Invoice are all generated deterministically as PDFs from system data.",
+          ],
+          outro: [
+            "The design principle, stated once and enforced everywhere: AI drafts, humans approve, and the backend is authoritative on money, GST and document numbers. Nothing financial is recomputed in the browser.",
+          ],
+        },
+      ],
+    },
+    stack: [
+      {
+        layer: "AI / ML",
+        items: [
+          "Anthropic Claude (claude-sonnet-4-6)",
+          "Groq fallback (openai/gpt-oss-120b)",
+          "Pydantic v2 schema validation",
+          "Structured JSON extraction",
+          "ai_outputs audit logging",
+        ],
+      },
+      {
+        layer: "Frontend",
+        items: [
+          "Vite · React 18 · TypeScript",
+          "React Query · Zustand · React Router · Axios",
+          "Tailwind CSS · Recharts",
+          "Vitest · Testing Library · MSW",
+        ],
+      },
+      {
+        layer: "Backend",
+        items: [
+          "Python 3.12 · FastAPI",
+          "SQLAlchemy 2 (async) · Alembic",
+          "PostgreSQL 16 · Redis 7",
+          "JWT auth · bcrypt",
+          "WeasyPrint (PDF) · openpyxl (Excel)",
+        ],
+      },
+      {
+        layer: "Infrastructure / DevOps",
+        items: [
+          "Docker Compose for local development",
+          "Vercel (frontend)",
+          "Container host with managed Postgres / Supabase",
+          "S3-compatible object storage for PDFs",
+          "GitHub Actions CI",
+          "HMAC-signed file URLs",
+        ],
+      },
+    ],
+    decisions: [
+      {
+        title: "AI that never blocks the business",
+        paragraphs: [
+          "An operations platform cannot depend on a language model being available. If the LLM is down, the trading company still has to send RFQs — so a design where the workflow waits on an API is a design that stops the business for reasons the business cannot see or fix.",
+          "All three AI touchpoints route through one call layer with a defined fallback ladder: try Anthropic, retry on Groq with JSON mode forced, and if both fail, degrade to a pre-filled manual form so the eighteen-step cycle continues. Every output is validated against a Pydantic schema before it reaches a user or a document, retrying up to three times. Token usage and confidence are logged for cost and quality tracking.",
+          "The result is that the AI is a labour saving on a process that already works without it. That is the only version of this a business can actually run on.",
+        ],
+      },
+      {
+        title: "Correctness on the paths that aren't the happy one",
+        paragraphs: [
+          "Import/export trading is not linear, and a system that only models the clean path quietly produces wrong numbers. Partial receipts, partial payments, several delivery challans and several invoices against one order are normal here, not exceptional.",
+          "They are all first-class flows, and the backend enforces the rules rather than trusting the interface: over-receipt is rejected, GST invoicing is blocked before delivery is confirmed, payment is blocked before CRV where the customer requires it, and vendor purchase orders are priced from the winning vendor quote rather than from the company's own selling price.",
+          "Several of those guards exist because live end-to-end testing found the gap. That is the argument for running a real order through the whole cycle before handover rather than testing the steps in isolation.",
+        ],
+      },
+      {
+        title: "A modular monolith, not microservices",
+        paragraphs: [
+          "The requirement is roughly 100 to 150 concurrent users across three companies that constantly need consistent reads of shared reference data. Microservices would have bought independent scaling nobody needed and paid for it in distributed transactions across exactly the data where a trading business cannot tolerate drift.",
+          "So: one PostgreSQL database with native ACID, one deployable, and company scoping enforced server-side through a company header plus capability RBAC rather than through separate services. Adversarial testing verified fifteen of fifteen isolation and RBAC scenarios — cross-company reads return 404, a forged company header returns 403, role-action mismatches return 403.",
+        ],
+      },
+      {
+        title: "The extraction bug worth writing down",
+        paragraphs: [
+          "An early version of quote extraction sent the model the document's storage key instead of the document. It returned plausible output — which is the failure mode that matters, because plausible output from a model that never saw the input is indistinguishable from working software until somebody checks a number against the source.",
+          "The fix was to pass the document text into the prompt along with the enquiry line context, so part numbers have something to match against. Live verification then extracted two vendor quotes at 0.97 to 0.99 confidence, with correct EUR and PKR totals and lead times normalised — '6 weeks' resolved to 42 days.",
+          "The lesson generalises past this project: with an LLM feature, 'it returned something' is not evidence that it read anything.",
+        ],
+      },
+    ],
+    results: {
+      note: "The figures below come from the project's QA and end-to-end verification reports. No production usage metrics — orders processed, time saved, revenue impact — were tracked, so none are claimed.",
+      headline: [
+        { value: 76, suffix: "/76", label: "Backend tests passing" },
+        { value: 15, suffix: "/15", label: "RBAC and adversarial checks passed" },
+      ],
+      columns: ["Check", "Result"],
+      rows: [
+        {
+          label: "Full enquiry-to-paid lifecycle",
+          value:
+            "Completed live on hosted Supabase — including partial receipt, two delivery challans, two invoices, CRV gating, partial payments and automatic order close-out",
+        },
+        { label: "Backend tests", value: "76/76 pytest passing in-container" },
+        {
+          label: "Frontend tests",
+          value: "6/6 Vitest passing; production build ~311 KB (~98 KB gzipped)",
+        },
+        {
+          label: "Security",
+          value: "15/15 RBAC and adversarial isolation checks passed live",
+        },
+        {
+          label: "AI confidence",
+          value: "RFQ draft 0.92; vendor quote extraction 0.97–0.99",
+        },
+        {
+          label: "Audit trail",
+          value:
+            "73 audit rows visible in the consolidated Owner view for a single test order",
+        },
+        {
+          label: "Design target, not measured in production",
+          value:
+            "RFQ generation under 5 minutes including human review, against roughly 45 minutes manual for a 30-line RFQ",
+        },
+      ],
+    },
+    // TODO: no screenshots supplied for this project. Anything added must be scrubbed
+    // first — the order screens carry real customer, vendor and pricing data.
+    screenshots: [],
+  },
+
   // ─────────────────────────────────────────────────────── §C · Agentic Decks ──
   {
     slug: "agentic-decks",
-    number: "02",
+    number: "03",
     name: "Agentic Decks",
     teaser: {
       pitch:
@@ -523,10 +737,213 @@ export const projects: Project[] = [
     screenshots: [],
   },
 
+  // ─────────────────────────────────────────────────────────── §G · EpochsLab ──
+  {
+    slug: "epochslab",
+    number: "04",
+    name: "EpochsLab",
+    teaser: {
+      pitch:
+        "Describe an ML goal in plain English and get back a trained, stored model — data found, code written, GPU job run, and the notebook is yours to export.",
+      engagement: "Own product",
+      domain: "MLOps",
+      metric: "Plain English in, trained model out",
+    },
+    eyebrow: "Own product",
+    oneLiner:
+      "Describe an ML goal in plain English; get back a trained model, its artifacts, and a live notebook you can export.",
+    pageTitle: "EpochsLab — OlvixAI",
+    metaDescription:
+      "An AI-powered ML automation platform: agents find the data, write the preprocessing and training code, run the job on cloud GPUs, and hand back a stored, exportable model.",
+    card: {
+      tags: ["Own product", "MLOps", "Multi-agent + GPU training"],
+      pitch:
+        "A platform where you describe the model you need in plain English and a team of agents does the pipeline — finds or ingests the data, profiles and cleans it, decides whether to train from scratch or fine-tune, runs the job on cloud GPUs, then stores the trained model and hands you the live notebook it wrote along the way.",
+      metric: "Problem description to trained model",
+      detail: "Late 2025 – 2026 · solo build",
+    },
+    meta: [
+      { label: "Type", value: "Own product — startup build" },
+      { label: "Domain", value: "Developer tools · MLOps" },
+      { label: "Timeframe", value: "Late 2025 – 2026" },
+      {
+        label: "Team",
+        value:
+          "Solo — product vision, agent architecture, backend, frontend and system design",
+      },
+      { label: "Status", value: "In development" },
+    ],
+    challenge: [
+      "Most people who need a trained model for a real problem are not blocked on ideas. They are blocked on the pipeline. Finding a usable dataset, cleaning it, choosing an architecture, deciding whether to train from scratch or fine-tune something that already exists, getting a GPU job to run, and saving the result in a form you can use later — every one of those is a specialist step, and together they are days of setup before you learn whether the idea was any good.",
+      "The tools that exist mostly automate the modelling and leave the rest. AutoML will search architectures once you already have clean data and know what you are predicting. It will not go and find the dataset, and it will not tell you that fine-tuning a pretrained model is the better call for what you actually have.",
+      "EpochsLab is built to close the whole gap: someone with basic ML knowledge should be able to go from a problem described in a sentence to a trained, stored model, without writing the pipeline by hand — and without the process being a black box they have to take on faith.",
+    ],
+    role: [
+      "A solo build covering product vision, the agent architecture, backend, frontend and system design end to end.",
+      "That means the LangGraph multi-agent graph — an orchestrator hub plus specialists for data, preprocessing, model selection, training and evaluation — the FastAPI backend with MongoDB and Redis, the Jupyter kernel execution engine, on-platform training against cloud GPU providers, model and artifact storage, and the React frontend carrying real-time monitoring, chat, approval UIs, the notebook and the file views. Plus the human-in-the-loop flow, credential encryption, auth and pipeline lifecycle underneath all of it.",
+    ],
+    built: {
+      groups: [
+        {
+          title: "The workflow",
+          lede: "describe the task, approve the decisions that matter, get a model.",
+          intro: [
+            "An orchestrator agent routes the pipeline — collect data, preprocess, select a model, train or fine-tune, evaluate, finish — and the user can steer it by chat at any point. Specialist agents run each stage and write real code into a live Jupyter notebook as they go.",
+            "The pipeline pauses at approval gates on the dataset, the preprocessing plan, and the model and training strategy. Then the model is trained on the platform, locally or on cloud GPUs, and stored with its artifacts for reuse and one-click export.",
+          ],
+          items: [
+            {
+              title: "Natural-language project setup",
+              body: "describe what you want to predict or classify; the platform takes it from there.",
+            },
+            {
+              title: "Dataset discovery, or your own data",
+              body: "search and rank datasets from Kaggle and Hugging Face, or upload your own CSV, JSON or Parquet.",
+            },
+            {
+              title: "Preprocessing",
+              body: "profile the data, propose a cleaning plan, then generate and run the code that carries it out.",
+            },
+            {
+              title: "Model selection with an explicit mode",
+              body: "recommend architectures suited to the task and choose the approach per case — train from scratch, fine-tune a pretrained model, or use a custom Hugging Face model.",
+            },
+            {
+              title: "On-platform and cloud GPU training",
+              body: "run the job inside EpochsLab with live progress, reaching for cloud GPU providers such as RunPod when the work is heavy enough to need one.",
+            },
+            {
+              title: "Model storage and one-click export",
+              body: "the trained model and its artifacts stay in project storage, downloadable as a package with the notebook, scripts and evaluation output.",
+            },
+            {
+              title: "Live notebook and a post-run copilot",
+              body: "every agent step becomes executable notebook cells you can inspect, and afterwards you can chat to run more code or add cells in the same kernel.",
+            },
+            {
+              title: "Human-in-the-loop approvals",
+              body: "approve, revise or reroute at each critical decision point.",
+            },
+            {
+              title: "Evaluation",
+              body: "metrics, visualisations and a readable report of how the model actually performed.",
+            },
+            {
+              title: "Multi-LLM and encrypted credentials",
+              body: "choose Azure OpenAI, Gemini or OpenAI per project; Kaggle and Hugging Face keys stored AES-encrypted.",
+            },
+          ],
+          outro: [
+            "The AI is load-bearing rather than decorative. It ranks datasets, generates the preprocessing and training code, recommends train-versus-fine-tune, diagnoses and retries its own failed code, and powers the copilot after the run. It is not a chat wrapper around a form.",
+          ],
+        },
+      ],
+    },
+    stack: [
+      {
+        layer: "AI / ML",
+        items: [
+          "LangGraph for stateful multi-agent graphs",
+          "Azure OpenAI · Gemini 2.5 Flash · OpenAI",
+          "LLM code generation and repair",
+          "Train-from-scratch and fine-tuning flows",
+          "Jupyter (ipykernel) execution",
+          "Kaggle and Hugging Face dataset and model APIs",
+        ],
+      },
+      {
+        layer: "Frontend",
+        items: [
+          "React 19 · TypeScript · Vite",
+          "Tailwind CSS",
+          "Zustand · TanStack Query",
+          "WebSockets for live progress",
+        ],
+      },
+      {
+        layer: "Backend",
+        items: [
+          "Python 3.11+ · FastAPI",
+          "Beanie / Motor (MongoDB)",
+          "Redis",
+          "JWT auth",
+          "AES-encrypted credentials",
+        ],
+      },
+      {
+        layer: "Infrastructure / DevOps",
+        items: [
+          "Cloud GPU providers (RunPod and similar) for training jobs",
+          "Platform storage for datasets, notebooks, trained models and artifacts",
+          "MongoDB Atlas-ready",
+          "Redis for rate limits, token blacklist and LLM cache",
+        ],
+      },
+    ],
+    decisions: [
+      {
+        title: "Pipelines that survive the wait",
+        paragraphs: [
+          "Approvals take as long as a person takes, and a training job can run for hours. A graph held in memory loses all of it on a restart — which on a long pipeline means losing precisely the expensive part.",
+          "So the graph is checkpointed: LangGraph with MongoDB-backed state, an interrupt before every approval node, and a coordinator that resumes from stored state when the approval eventually arrives over WebSocket or REST. A restart mid-pipeline becomes an inconvenience rather than a lost run.",
+        ],
+      },
+      {
+        title: "Train from scratch, fine-tune, or neither — decided per case",
+        paragraphs: [
+          "Defaulting to one training strategy is what makes automated ML tools produce bad models confidently. A small dataset fine-tuned onto a pretrained backbone will beat the same data thrown at a fresh architecture, and the reverse holds when the task is genuinely unlike anything pretrained.",
+          "Model selection weighs dataset size, task type and stated intent, then recommends candidates with the mode attached — from scratch, fine-tune, or a specific custom model. The mode is part of the recommendation the user approves, not a hidden default they never see.",
+        ],
+      },
+      {
+        title: "Automation that stays inspectable",
+        paragraphs: [
+          "The fastest way to make an automated ML platform untrustworthy is to hand back a model with no account of how it was produced. A number without a method is not a result, and a user who cannot check the work cannot defend it to anyone else.",
+          "Every specialist writes its own cells into a live notebook, so the pipeline leaves a readable trail of the actual code that ran. The orchestrator routes with guardrails rather than pure model discretion, and approvals support continue, revise or reroute. The user can always see what was done, and change it.",
+        ],
+      },
+      {
+        title: "Failed generated code is a state to handle, not an error to surface",
+        paragraphs: [
+          "LLM-generated code fails often enough that treating every failure as a dead end would make the product unusable. Most of those failures are also shallow — a wrong column name, a missing import, a shape mismatch — and a human would fix them without thinking.",
+          "So a failure is fed back with its traceback for diagnosis and retry, and only escalates to the user when repair does not converge. That is the difference between a pipeline that finishes and one that stops halfway with a stack trace.",
+        ],
+      },
+    ],
+    results: {
+      note: "EpochsLab is an own product still in development. No production metrics — users, revenue, latency — are published, so none are claimed here. What follows is what the platform does end to end.",
+      rows: [
+        {
+          label: "Path covered",
+          value:
+            "Describe the problem, find or upload data, preprocess, select a model, train or fine-tune, store the model, evaluate, export",
+        },
+        {
+          label: "Training strategy",
+          value:
+            "Chosen per case — from scratch, fine-tune a pretrained model, or a custom Hugging Face model",
+        },
+        {
+          label: "Compute",
+          value:
+            "On-platform training, with cloud GPU providers such as RunPod for heavier jobs",
+        },
+        {
+          label: "Transparency",
+          value:
+            "Every agent step written as executable notebook cells, with human approval gates at dataset, preprocessing and model selection",
+        },
+        { label: "Production metrics", value: "None tracked, and none claimed" },
+      ],
+    },
+    // TODO: no screenshots supplied for this project.
+    screenshots: [],
+  },
+
   // ──────────────────────────────────────────────────────────── §D · HRXpert ──
   {
     slug: "hrxpert",
-    number: "03",
+    number: "05",
     name: "HRXpert",
     teaser: {
       pitch:
@@ -685,7 +1102,7 @@ export const projects: Project[] = [
   // ─────────────────────────────────────────────────────────── §E · KairosAI ──
   {
     slug: "kairosai",
-    number: "04",
+    number: "06",
     name: "KairosAI",
     teaser: {
       pitch:
@@ -885,12 +1302,12 @@ export const projects: Project[] = [
 export const portfolioIndex = {
   pageTitle: "Work — OlvixAI",
   metaDescription:
-    "Four AI products, from a B2B health platform live on both app stores to an agent that writes and edits PowerPoint files. What we built, how, and what it cost.",
+    "Six AI products — a B2B health platform live on both app stores, a trading company's entire operation, an agent that writes and edits PowerPoint files. What we built, how, and what we can prove.",
   eyebrow: "Work",
-  heading: "Four products.",
+  heading: "Six products.",
   headingDimmed: "Every layer of each one.",
   intro:
-    "Two of these were built for other people, two we built ourselves. All four went past the demo — through the parts that are tedious and unglamorous and are the actual reason software stays up. Each page below says what the problem was, what we decided and why, and what we can prove.",
+    "Two were built for paying clients, one is a live feature inside an employer's product, and three we built ourselves. All six went past the demo — through the parts that are tedious and unglamorous and are the actual reason software stays up. Each page below says what the problem was, what we decided and why, and what we can prove.",
   cta: {
     heading: "Want yours",
     headingDimmed: "in this list?",
@@ -909,10 +1326,60 @@ export function getProject(slug: string): Project | undefined {
  * Prev/next for the case-study footer. The list wraps, so both are always present
  * and the reader can never hit a dead end at either edge.
  */
-export function getProjectNeighbours(slug: string): { prev: Project; next: Project } | null {
+export function getProjectNeighbours(
+  slug: string
+): { prev: ProjectNavItem; next: ProjectNavItem } | null {
   const index = projects.findIndex((project) => project.slug === slug);
   if (index === -1) return null;
   const prev = projects[(index - 1 + projects.length) % projects.length];
   const next = projects[(index + 1) % projects.length];
-  return { prev, next };
+  return { prev: toNavItem(prev), next: toNavItem(next) };
 }
+
+/**
+ * Slim projections for client components.
+ *
+ * `projects` carries the full case-study prose — every challenge paragraph, decision
+ * essay, stack row and results table for all six. Two things go wrong if a
+ * `"use client"` component touches it directly:
+ *
+ *  - importing it pulls the whole module into that component's client JS bundle, and
+ *  - passing a whole `Project` across the server/client boundary serialises every
+ *    paragraph of it into the HTML of every page that renders the component.
+ *
+ * Both were happening. The prev/next nav received two complete neighbouring case
+ * studies in order to render two names, which put PowerUp's decision essays into the
+ * HTML of the Trading Operations page; and the home page teaser and footer imported the
+ * entire array to show six short strings.
+ *
+ * So client components take these projections as props from the server pages instead.
+ * Keep it that way: if a client component needs project data, add a projection here
+ * rather than widening it to `Project`.
+ */
+export type ProjectNavItem = Pick<Project, "slug" | "name" | "eyebrow">;
+export type ProjectTeaserItem = Pick<Project, "slug" | "name" | "teaser">;
+export type ProjectCardItem = Pick<Project, "slug" | "name" | "number" | "card">;
+export interface ProjectLink {
+  name: string;
+  href: string;
+}
+
+function toNavItem({ slug, name, eyebrow }: Project): ProjectNavItem {
+  return { slug, name, eyebrow };
+}
+
+/** Home page "Selected work" teaser. */
+export const projectTeasers: ProjectTeaserItem[] = projects.map(
+  ({ slug, name, teaser }) => ({ slug, name, teaser })
+);
+
+/** Footer "Work" column. */
+export const projectLinks: ProjectLink[] = projects.map(({ slug, name }) => ({
+  name,
+  href: `/portfolio/${slug}`,
+}));
+
+/** `/portfolio` index cards. */
+export const projectCards: ProjectCardItem[] = projects.map(
+  ({ slug, name, number, card }) => ({ slug, name, number, card })
+);

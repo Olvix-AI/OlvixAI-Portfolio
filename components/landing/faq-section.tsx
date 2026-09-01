@@ -37,7 +37,7 @@ const faqs = [
   {
     question: "Which AI models do you use?",
     answer:
-      "Whichever fits the task and the budget. We've shipped on OpenAI and on Azure OpenAI, and we pick per call rather than per project — a cheap model for extraction and a strong one for judgement is usually the difference between a feature that's affordable and one that isn't. Where a general model is the wrong tool, we train one: PowerUp's device reader is a purpose-trained vision model, not an OCR API.",
+      "Whichever fits the task and the budget. We've shipped on Anthropic Claude, OpenAI, Azure OpenAI and Gemini, and we pick per call rather than per project — a cheap model for extraction and a strong one for judgement is usually the difference between a feature that's affordable and one that isn't. We also build the fallback: on the trading platform every AI call tries Anthropic, retries on Groq, then degrades to a pre-filled manual form, so the business never stops because a model is down. And where a general model is the wrong tool we train one — PowerUp's device reader is a purpose-trained vision model, not an OCR API.",
   },
   {
     question: "Do you sign NDAs?",

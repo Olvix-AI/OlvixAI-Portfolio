@@ -12,7 +12,7 @@ import { DecisionList } from "@/components/portfolio/decision-block";
 import { ResultsTable } from "@/components/portfolio/results-table";
 import { ScreenshotGallery } from "@/components/portfolio/screenshot-gallery";
 import { ProjectNav } from "@/components/portfolio/project-nav";
-import { getProject, getProjectNeighbours, projects } from "@/lib/projects";
+import { getProject, getProjectNeighbours, projectLinks, projects } from "@/lib/projects";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -104,7 +104,7 @@ export default async function CaseStudyPage({ params }: PageProps) {
       />
 
       <ProjectNav prev={neighbours.prev} next={neighbours.next} />
-      <FooterSection />
+      <FooterSection workLinks={projectLinks} />
     </main>
   );
 }

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 
 import { Navigation } from "@/components/landing/navigation";
 import { FooterSection } from "@/components/landing/footer-section";
+import { projectLinks } from "@/lib/projects";
 import { ContactSection } from "@/components/contact/contact-section";
 import { ContactFaq } from "@/components/contact/contact-faq";
 
@@ -19,7 +20,7 @@ export default function ContactPage() {
       <ContactFaq />
       {/* No CTA section here on purpose — a CTA on the contact page is a dead
           end. The page closes with the footer. */}
-      <FooterSection />
+      <FooterSection workLinks={projectLinks} />
     </main>
   );
 }

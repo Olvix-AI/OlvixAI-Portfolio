@@ -69,12 +69,32 @@ Three things to settle before building:
 
 ### Slugs
 
-| Project | Slug | Route |
-|---|---|---|
-| PowerUp | `powerup` | `/portfolio/powerup` |
-| Agentic Decks | `agentic-decks` | `/portfolio/agentic-decks` |
-| HRXpert | `hrxpert` | `/portfolio/hrxpert` |
-| KairosAI | `kairosai` | `/portfolio/kairosai` |
+Display order is strongest-first, and it is the array order in `lib/projects.ts`.
+
+| # | Project | Slug | Type |
+|---|---|---|---|
+| 01 | PowerUp | `powerup` | Client engagement |
+| 02 | Trading Operations | `trading-operations` | Client engagement — SMC Group |
+| 03 | Agentic Decks | `agentic-decks` | Employer's production feature |
+| 04 | EpochsLab | `epochslab` | Own product |
+| 05 | HRXpert | `hrxpert` | In-house build — academic capstone |
+| 06 | KairosAI | `kairosai` | In-house build — academic capstone |
+
+### Where the copy lives — read this before editing
+
+§B–§E below (PowerUp, Agentic Decks, HRXpert, KairosAI) carry their full copy in this
+document, and it was transcribed into `lib/projects.ts` verbatim.
+
+**§F and §G — Trading Operations and EpochsLab — were written directly into
+`lib/projects.ts`** from `docs/Trading Operations Platform/CASE_STUDY.txt` and
+`docs/epochslab/CASE_STUDY.txt`. Their sections below record the decisions, the framing
+and the open flags, but not a second copy of the prose.
+
+That is a deliberate change of convention. Holding ~4,000 words of page copy in two
+places creates exactly the drift problem that the home page teaser already had before it
+was pointed at `lib/projects.ts`. **`lib/projects.ts` is now canonical for project page
+copy; this document is canonical for the reasoning, the ordering and the honesty checks.**
+If you edit prose, edit it in `lib/projects.ts`.
 
 ### Before this ships — two honesty checks
 
@@ -107,24 +127,29 @@ Nothing for Agentic Decks. Two notes:
 # §A · Portfolio index — `/portfolio`
 
 **Page title:** `Work — OlvixAI`
-**Meta description:** `Four AI products, from a B2B health platform live on both app stores
-to an agent that writes and edits PowerPoint files. What we built, how, and what it cost.`
+**Meta description:** `Six AI products — a B2B health platform live on both app stores, a
+trading company's entire operation, an agent that writes and edits PowerPoint files. What
+we built, how, and what we can prove.`
 
 **Eyebrow** `Work`
 
 **Heading**
 ```
-Four products.
+Six products.
 Every layer of each one. ← dimmed line
 ```
 
 **Intro**
 ```
-Two of these were built for other people, two we built ourselves. All four went past the
-demo — through the parts that are tedious and unglamorous and are the actual reason
-software stays up. Each page below says what the problem was, what we decided and why,
-and what we can prove.
+Two were built for paying clients, one is a live feature inside an employer's product, and
+three we built ourselves. All six went past the demo — through the parts that are tedious
+and unglamorous and are the actual reason software stays up. Each page below says what the
+problem was, what we decided and why, and what we can prove.
 ```
+
+> The split in that first sentence has to stay accurate as projects are added or pulled.
+> Today: clients = PowerUp, Trading Operations. Employer's feature = Agentic Decks. Ours =
+> EpochsLab, HRXpert, KairosAI.
 
 **Filter chips** (optional; nice-to-have, not required for v1)
 ```
@@ -962,6 +987,86 @@ revenue metrics were collected, so none are reported here.
 `docs/KairosAI/` — 2 images. Thin for a full page; worth capturing a few more from the
 running MVP if it still runs, particularly the matching dashboard and the extension in
 action on a real form.
+
+---
+
+# §F · Trading Operations — `/portfolio/trading-operations`
+
+Source: `docs/Trading Operations Platform/CASE_STUDY.txt`. Full page copy is in
+`lib/projects.ts` under slug `trading-operations`.
+
+**Why this sits at 02, directly after PowerUp.** It is the *second genuine commercial
+client engagement* in the portfolio, and it carries the hardest verified numbers of any
+project here — 76/76 backend tests, 15/15 adversarial RBAC checks, and a complete
+enquiry-to-paid lifecycle run live including partial receipts, two delivery challans, two
+invoices, CRV gating and automatic close-out. Before this, the portfolio was one client
+project and three things OlvixAI built for itself. It now reads as a studio with a client
+track record.
+
+**The four decision blocks**, which are the substance of the page:
+1. *AI that never blocks the business* — the Anthropic → Groq → pre-filled manual form
+   fallback ladder. The strongest single argument on the whole site for the "we do
+   production, not demos" positioning, because it is a design that assumes the model is
+   unavailable.
+2. *Correctness on the paths that aren't the happy one* — partial receipts and payments as
+   first-class flows, with backend guards; several of them written because live E2E
+   testing found the gap.
+3. *A modular monolith, not microservices* — chosen against the fashionable answer, with
+   the reason stated.
+4. *The extraction bug worth writing down* — the early version sent the LLM a storage key
+   instead of the document and returned plausible output anyway. Kept deliberately: it is
+   the most useful paragraph on the site for a technical buyer, because it shows the team
+   knows the difference between "it returned something" and "it read the input".
+
+## ⚠ Two things to settle before this page stays up
+
+**1. Client naming needs sign-off.** The page names SMC Group in its `Type` row, because
+the source case study does. But the site's own ownership section promises *"Nothing goes
+in our portfolio without your written sign-off."* Publishing the client's name without
+that sign-off contradicts a claim made three sections above it on the home page. Either
+get it in writing, or change `meta[0]` to a neutral value — `Client project — import/export
+trading group` — which loses nothing that matters to a prospect.
+
+**2. The live URL is deliberately not published.** The source case study lists the live
+product as a bare IP address over plain HTTP. Publishing that on a public marketing site
+points the internet at a client's production operations system, so it is not in
+`lib/projects.ts` and should not be added — and the address is redacted here too, because
+this repo is public. It is in `docs/Trading Operations Platform/CASE_STUDY.txt`, which is
+gitignored for the same reason. If a demo link is wanted, put a domain and TLS in front of
+it first, behind auth.
+
+---
+
+# §G · EpochsLab — `/portfolio/epochslab`
+
+Source: `docs/epochslab/CASE_STUDY.txt`. Full page copy is in `lib/projects.ts` under slug
+`epochslab`.
+
+**Why 04, behind Agentic Decks.** It is the most ambitious thing in the portfolio and the
+only own product, but it is still in development with no production metrics, while Agentic
+Decks is live in public production at a commercial company. Proof beats ambition in
+ordering, so Decks goes first.
+
+**Type is "Own product — startup build", and `Status` says "In development".** Both are
+load-bearing. A platform page that reads like a shipped product but has no users is the
+kind of thing a prospect discovers and then discounts everything else on the site for. The
+results table says "Production metrics: None tracked, and none claimed" in as many words.
+
+**The four decision blocks:**
+1. *Pipelines that survive the wait* — MongoDB-checkpointed LangGraph state, interrupts on
+   approval nodes, resume from stored state. The real problem: a restart mid-pipeline
+   otherwise loses the expensive part.
+2. *Train from scratch, fine-tune, or neither — decided per case* — why a default training
+   strategy is what makes automated ML tools confidently wrong.
+3. *Automation that stays inspectable* — every agent step written as notebook cells, so the
+   pipeline leaves a readable trail. "A number without a method is not a result."
+4. *Failed generated code is a state to handle, not an error to surface* — diagnose and
+   retry, escalate only when repair does not converge.
+
+**One positioning note.** EpochsLab is OlvixAI's own product, not client work. That is a
+genuine strength — it demonstrates the team ships for itself at the same standard — but it
+also means the portfolio's honest split is now two client projects, one employer feature,
+one own product and two capstones. The index intro says exactly that.
 
 ---
 

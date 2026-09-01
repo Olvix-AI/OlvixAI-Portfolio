@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { AnimatedWave } from "./animated-wave";
+import type { ProjectLink } from "@/lib/projects";
 
 // `badge` is optional and currently unused — the "Hiring" pill came out with the Careers
 // link. Typing it here rather than inferring keeps the badge rendering below valid for
@@ -11,31 +12,24 @@ type FooterLink = { name: string; href: string; badge?: string };
 
 // Section anchors are prefixed with "/" so they resolve from /portfolio and /contact,
 // not just from the landing page.
-const footerLinks: Record<string, FooterLink[]> = {
-  Services: [
-    { name: "New builds", href: "/#services" },
-    { name: "AI integration", href: "/#services" },
-    { name: "How we work", href: "/#how-we-work" },
-    { name: "Capabilities", href: "/#stack" },
-  ],
-  Work: [
-    { name: "All work", href: "/portfolio" },
-    { name: "PowerUp", href: "/portfolio/powerup" },
-    { name: "Agentic Decks", href: "/portfolio/agentic-decks" },
-    { name: "HRXpert", href: "/portfolio/hrxpert" },
-    { name: "KairosAI", href: "/portfolio/kairosai" },
-  ],
-  Company: [
-    { name: "Get a quote", href: "/contact" },
-    { name: "FAQ", href: "/#faq" },
-    { name: "hello@olvix.io", href: "mailto:hello@olvix.io" },
-  ],
-  Legal: [
-    { name: "Privacy", href: "#" },
-    { name: "Terms", href: "#" },
-    { name: "Ownership", href: "/#ownership" },
-  ],
-};
+const services: FooterLink[] = [
+  { name: "New builds", href: "/#services" },
+  { name: "AI integration", href: "/#services" },
+  { name: "How we work", href: "/#how-we-work" },
+  { name: "Capabilities", href: "/#stack" },
+];
+
+const company: FooterLink[] = [
+  { name: "Get a quote", href: "/contact" },
+  { name: "FAQ", href: "/#faq" },
+  { name: "hello@olvix.io", href: "mailto:hello@olvix.io" },
+];
+
+const legal: FooterLink[] = [
+  { name: "Privacy", href: "#" },
+  { name: "Terms", href: "#" },
+  { name: "Ownership", href: "/#ownership" },
+];
 
 const socialLinks = [
   { name: "LinkedIn", href: "#" },
@@ -46,7 +40,22 @@ const socialLinks = [
 const focusRing =
   "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
-export function FooterSection() {
+/**
+ * `workLinks` is passed in rather than imported so this client component never pulls
+ * `lib/projects.ts` — and the six full case studies in it — into the bundle of every
+ * page that renders a footer. Server pages pass `projectLinks`.
+ */
+export function FooterSection({ workLinks }: { workLinks: ProjectLink[] }) {
+  // Column order is the render order. Work is derived from the project list, so adding
+  // or pulling a project updates the footer with it — pulling one is a real scenario,
+  // since publishing Agentic Decks is still pending an NDA check.
+  const columns: Record<string, FooterLink[]> = {
+    Services: services,
+    Work: [{ name: "All work", href: "/portfolio" }, ...workLinks],
+    Company: company,
+    Legal: legal,
+  };
+
   return (
     <footer className="relative border-t border-foreground/10">
       {/* Animated wave background */}
@@ -86,7 +95,7 @@ export function FooterSection() {
             </div>
 
             {/* Link Columns */}
-            {Object.entries(footerLinks).map(([title, links]) => (
+            {Object.entries(columns).map(([title, links]) => (
               <div key={title}>
                 <h3 className="text-sm font-medium mb-6">{title}</h3>
                 <ul className="space-y-4">

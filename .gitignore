@@ -38,3 +38,9 @@ docs/*.docx
 
 # Claude Code per-machine settings (local by convention)
 .claude/settings.local.json
+
+# Raw case-study source text, same reasoning as the .docx above. The Trading Operations
+# one carries the client's live production URL — a raw IP over plain HTTP — which is
+# deliberately not published on the site and must not be published here either.
+# The scrubbed, publishable versions of this copy live in lib/projects.ts.
+docs/**/CASE_STUDY.txt

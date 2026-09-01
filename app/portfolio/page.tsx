@@ -5,7 +5,7 @@ import { FooterSection } from "@/components/landing/footer-section";
 import { PortfolioHero } from "@/components/portfolio/portfolio-hero";
 import { ProjectCard } from "@/components/portfolio/project-card";
 import { PortfolioCta } from "@/components/portfolio/portfolio-cta";
-import { portfolioIndex, projects } from "@/lib/projects";
+import { portfolioIndex, projectCards, projectLinks } from "@/lib/projects";
 
 export const metadata: Metadata = {
   title: portfolioIndex.pageTitle,
@@ -21,7 +21,7 @@ export default function PortfolioIndexPage() {
       <section aria-label="Case studies" className="relative pb-8">
         <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
           <ul>
-            {projects.map((project, index) => (
+            {projectCards.map((project, index) => (
               <ProjectCard key={project.slug} project={project} index={index} />
             ))}
           </ul>
@@ -29,7 +29,7 @@ export default function PortfolioIndexPage() {
       </section>
 
       <PortfolioCta />
-      <FooterSection />
+      <FooterSection workLinks={projectLinks} />
     </main>
   );
 }
