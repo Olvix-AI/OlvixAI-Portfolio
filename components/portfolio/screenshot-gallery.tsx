@@ -17,6 +17,21 @@ import { MEASURE } from "./project-section";
  * `next.config.mjs` sets `images.unoptimized: true`, so whatever lands here ships at
  * full weight — convert to WebP and resize before this goes anywhere public.
  */
+/**
+ * `next/link` prefixes `basePath` for you. `next/image` with `unoptimized: true` does
+ * NOT — it passes `src` through verbatim, so on GitHub Pages the browser asked for
+ * `/work/...` instead of `/OlvixAI-Portfolio/work/...` and every image 404'd while the
+ * files themselves were sitting there fine.
+ *
+ * Same env var `next.config.mjs` reads, inlined at build time: empty locally, so paths
+ * stay root-relative for `npm run dev`.
+ *
+ * Worth knowing how this got missed: verifying it by fetching `<basePath><src>` proves
+ * the file exists, not that the link in the markup resolves. Check the `src` attribute
+ * in the built HTML and fetch exactly that.
+ */
+const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
+
 export function ScreenshotGallery({
   screenshots,
   projectName,
@@ -54,7 +69,7 @@ export function ScreenshotGallery({
               style={{ transitionDelay: `${index * 80}ms` }}
             >
               <Image
-                src={shot.src}
+                src={`${BASE_PATH}${shot.src}`}
                 alt={shot.alt || `${projectName} screenshot`}
                 width={shot.width}
                 height={shot.height}
