@@ -4,15 +4,35 @@
 
 import { useEffect, useState, useRef } from "react";
 
+// Roles are deliberately generic. Naming the exact services (EC2 · Lambda · S3) dated
+// the section the moment the stack moved, and it argued the wrong thing — the claim
+// worth making is "we run production on these", not a service inventory.
+//
+// The right-hand column is a receipt: it names the engagement that put us on that
+// platform. Only fill it in when a real project did. Anything we can work with but
+// haven't shipped on goes in `alsoWorkWith` below, without a project name.
 const deployments = [
-  { platform: "AWS", role: "EC2 · Lambda · S3", project: "HRXpert" },
-  { platform: "Azure", role: "Vision + OpenAI", project: "PowerUp" },
-  { platform: "Vercel", role: "Web front ends", project: "KairosAI" },
-  { platform: "Kubernetes", role: "Blue/green rollouts", project: "Decks" },
-  { platform: "Supabase", role: "Managed Postgres", project: "Trading Ops" },
+  { platform: "AWS", role: "Cloud infrastructure", project: "HRXpert" },
+  { platform: "Azure", role: "Cloud and AI inference", project: "PowerUp" },
+  { platform: "Vercel", role: "Web hosting", project: "KairosAI" },
+  { platform: "Kubernetes", role: "Container orchestration", project: "Decks" },
+  { platform: "Supabase", role: "Managed database and auth", project: "Trading Ops" },
   { platform: "RunPod", role: "Cloud GPU training", project: "EpochsLab" },
-  { platform: "GitHub Actions", role: "CI/CD on push", project: "All" },
-  { platform: "App Store · Play", role: "Release pipelines", project: "PowerUp" },
+  { platform: "GitHub Actions", role: "CI/CD pipelines", project: "All" },
+  { platform: "App Store · Play", role: "Mobile release", project: "PowerUp" },
+];
+
+// Platforms we work with that none of the six case studies happens to run on. Kept
+// visually separate and without a project name on purpose — the list above is proof,
+// this one is capability, and collapsing the two would cost the section the thing that
+// makes it credible. Prune this to what is actually true.
+const alsoWorkWith = [
+  "Google Cloud",
+  "Cloudflare",
+  "DigitalOcean",
+  "Fly.io",
+  "Railway",
+  "Docker",
 ];
 
 const stats = [
@@ -128,6 +148,22 @@ export function InfrastructureSection() {
                     <span className="font-mono text-sm text-background/60">{deployment.project}</span>
                   </div>
                 ))}
+              </div>
+
+              {/* Capability, not proof — no project column, and no status dot, so it
+                  reads as a different kind of claim from the rows above. */}
+              <div className="px-6 py-5 border-t border-background/10">
+                <span className="text-xs font-mono text-background/50">Also work with</span>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {alsoWorkWith.map((platform) => (
+                    <span
+                      key={platform}
+                      className="px-3 py-1.5 border border-background/15 text-xs font-mono text-background/70"
+                    >
+                      {platform}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

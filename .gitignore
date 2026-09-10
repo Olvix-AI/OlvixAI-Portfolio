@@ -44,3 +44,11 @@ docs/*.docx
 # deliberately not published on the site and must not be published here either.
 # The scrubbed, publishable versions of this copy live in lib/projects.ts.
 docs/**/CASE_STUDY.txt
+
+# Verification builds run with NEXT_DIST_DIR so they never touch a running dev server.
+.next-verify/
+
+# public/work/ IS tracked — the case-study screenshots live there. They were reviewed
+# before being committed and are resized WebP, not the raw captures in docs/. The
+# HRXpert applicants and resume views are deliberately NOT among them: they contain
+# real names and personal email addresses. See docs/Portfolio-Copy.md.

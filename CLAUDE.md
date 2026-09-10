@@ -27,9 +27,19 @@ Two content rules that are deliberate, not accidental — don't "fix" them:
 
 Of the six case studies, **two are commercial client work — PowerUp and Trading
 Operations.** Agentic Decks is an employer's production feature, EpochsLab is OlvixAI's
-own product (still in development), and HRXpert and KairosAI are academic capstones. Each
-page carries its true `Type` label as `meta[0]` — that labelling is intentional and must
-not be softened to make the portfolio look more commercial.
+own product (still in development), and HRXpert and KairosAI are academic capstones.
+
+**The engagement type is no longer displayed anywhere on the site.** It used to lead the
+index card tags, the case-study hero eyebrow and a `Type` row in the meta strip; all
+three were removed at the owner's request in favour of a cleaner portfolio. Don't
+reintroduce them without asking — but equally, don't write copy that positively asserts
+something was client work when it wasn't.
+
+The meta strip has since been cut to `Domain` and `Status` as well — `Timeframe` and
+`Team` are gone. **`Status` is now the only thing on the entire site** that distinguishes
+a shipped client engagement from a project OlvixAI built for itself: "Live — App Store and
+Google Play" against "Complete and validated; not publicly deployed", "not commercially
+launched", "In development". Do not soften or remove it. There is nothing behind it.
 
 Two open flags on Trading Operations, both recorded in `docs/Portfolio-Copy.md` §F:
 the page names the client (SMC Group), which the site's own ownership section promises not
@@ -41,11 +51,43 @@ plain HTTP, deliberately **not** published.
 ## Commands
 
 ```bash
-npm run dev     # dev server -> http://localhost:3000
-npm run build   # production build
-npm start       # serve production build
-npm run lint    # eslint (note: eslint is NOT in devDependencies; this will fail as-is)
+npm run dev          # dev server -> http://localhost:3000   <- the everyday one
+npm run build        # static export -> ./out
+npx serve@latest out # preview that export (needs network on first run)
+npx tsc --noEmit     # type check; the build will NOT do this for you
+npm run lint         # BROKEN: eslint is not in devDependencies
 ```
+
+`npm start` **does not work** and is not worth trying: `next start` refuses to run
+against `output: 'export'`. There is no server to start — the build emits static files
+to `out/`. Serve that directory with anything (`npx serve out`, `py -3 -m http.server`).
+
+**Never run `npm run build` while `npm run dev` is up.** `next dev` and `next build` both
+own `.next`, so the build corrupts the dev server's manifests. It does not fail loudly —
+the dev server keeps listening and starts returning `500 Internal Server Error` with
+`ENOENT ... .next/dev/server/pages/_app/build-manifest.json` in its log, and only a
+restart with a wiped `.next` recovers it. On Windows you may also see `EBUSY` on
+`.next/export` during build cleanup.
+
+To verify a build without touching a running dev server, send it elsewhere:
+
+```powershell
+$env:NEXT_DIST_DIR='.next-verify'; npm run build
+```
+
+With `output: 'export'` that also relocates the exported site, so the finished HTML is in
+`.next-verify/` (gitignored), not `out/`. A real deploy still needs a normal build.
+
+If a dev server has already been broken this way: stop it, `Remove-Item -Recurse -Force
+.next`, then `npm run dev`.
+
+One more Windows trap, from the Pages setup:
+- **Don't set `NEXT_PUBLIC_BASE_PATH` from Git Bash.** MSYS rewrites the leading slash
+  into a Windows path, and the build fails with
+  `basePath has to start with a /, found "C:/Program Files/Git/OlvixAI-Portfolio"`. Use
+  PowerShell (`$env:NEXT_PUBLIC_BASE_PATH='/OlvixAI-Portfolio'`) if you need to
+  reproduce the deployed subpath locally. For ordinary local work, leave it unset —
+  the site then serves from `/`, which is what `npm run dev` expects.
 
 Install with `npm install --legacy-peer-deps`. Several Radix/React deps declare peer
 ranges that predate React 19, so a plain `npm install` errors out. A `pnpm-lock.yaml`
@@ -188,10 +230,15 @@ Every file in `components/landing/` follows the same shape. Match it when adding
   one frame. Add the same guard to any new canvas work.
 - `html` carries `scroll-padding-top: 6rem` so anchor jumps don't land the target, and
   its focus ring, underneath the fixed nav.
-- Screenshot galleries render from a `screenshots: []` array in `lib/projects.ts` that
-  is **intentionally empty for every project**. The assets in `docs/` contain real
-  names, contact details and health data and need a manual scrub (plus WebP conversion,
-  since `images.unoptimized: true`) before they go in `public/`.
+- Screenshot galleries render from `screenshots` in `lib/projects.ts`, backed by
+  reviewed WebP files in `public/work/<slug>/` (15 images, ~0.9MB, tracked in git).
+  PowerUp, HRXpert and KairosAI have them; the other three projects have no assets and
+  the gallery renders nothing rather than an empty grid.
+  **The raw captures in `docs/` are not all publishable.** `14. Applicants Page.png`
+  and both resume views contain real names and personal Gmail addresses — team members
+  used their own accounts as test applicants — and are deliberately excluded. Look at
+  any image before adding it, and convert to WebP first since
+  `images.unoptimized: true` ships whatever you commit at full weight.
 - **Nothing nondeterministic may be rendered during SSR.** Two hydration mismatches
   were already fixed here and the same shapes will reintroduce them:
   - `metrics-section.tsx` — the live clock is mount-gated (`useState<Date | null>(null)`,

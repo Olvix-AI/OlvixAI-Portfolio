@@ -4,12 +4,18 @@ import type { MetaRow } from "@/lib/projects";
 import { useReveal } from "./reveal";
 
 /**
- * The Type / Domain / Timeframe / Team / Status strip.
+ * The Domain / Status strip.
  *
- * The first row is always `Type`, and it is deliberately the loudest thing here: the
- * copy doc's honesty check requires each project to state plainly whether it was a
- * contract engagement, a production feature of someone else's product, or an in-house
- * capstone. It is rendered at full foreground weight while the rest sit at /70.
+ * There used to be a leading `Type` row stating the engagement category, rendered at
+ * full weight while the rest sat at /70. That row was removed from the site, so the
+ * emphasis went with it — keeping it would have arbitrarily bolded whatever row
+ * happened to be first. All rows now render the same.
+ *
+ * `Timeframe` and `Team` were removed too, so only two rows remain. `Status` is now
+ * the ONLY thing on the site that distinguishes a shipped client engagement from a
+ * project OlvixAI built for itself — "Live — App Store and Google Play" versus "not
+ * publicly deployed", "not commercially launched", "In development". Do not soften or
+ * remove it; there is nothing left behind it.
  */
 export function ProjectMeta({ rows }: { rows: MetaRow[] }) {
   const { ref, isVisible } = useReveal<HTMLElement>();
@@ -19,7 +25,6 @@ export function ProjectMeta({ rows }: { rows: MetaRow[] }) {
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <dl className="py-4 lg:py-6">
           {rows.map((row, index) => {
-            const isType = index === 0;
             return (
               <div
                 key={row.label}
@@ -31,11 +36,7 @@ export function ProjectMeta({ rows }: { rows: MetaRow[] }) {
                 <dt className="shrink-0 sm:w-40 text-xs sm:text-sm font-mono text-muted-foreground">
                   {row.label}
                 </dt>
-                <dd
-                  className={`text-base lg:text-lg ${
-                    isType ? "text-foreground font-medium" : "text-foreground/70"
-                  }`}
-                >
+                <dd className="text-base lg:text-lg text-foreground/70">
                   {row.value}
                 </dd>
               </div>

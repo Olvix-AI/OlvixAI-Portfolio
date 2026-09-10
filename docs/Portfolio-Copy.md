@@ -40,7 +40,7 @@ app/
 components/
   portfolio/
     project-hero.tsx
-    project-meta.tsx              # the type/domain/timeframe/team strip
+    project-meta.tsx              # the domain/status strip
     project-section.tsx           # eyebrow + serif heading + prose, reused throughout
     stack-table.tsx
     decision-block.tsx
@@ -98,13 +98,25 @@ If you edit prose, edit it in `lib/projects.ts`.
 
 ### Before this ships — two honesty checks
 
-**1. Label each project truthfully.** Only PowerUp is a commercial client engagement.
-HRXpert and KairosAI are academic capstones built to production standard. Agentic Decks is
-production work done by a team member inside their employer's product. Every page below
-carries a `Type` line in its meta strip that says which — don't quietly drop it to make the
-portfolio look more commercial. A prospect who discovers the difference later will discount
-everything else on the site; one who reads it up front sees four projects and a team that
-doesn't oversell.
+**1. The engagement type is no longer displayed.** PowerUp and Trading Operations are
+commercial client engagements. Agentic Decks is production work done inside an employer's
+product, EpochsLab is OlvixAI's own product and still in development, and HRXpert and
+KairosAI are academic capstones built to production standard.
+
+Those labels used to appear in three places — the first index-card tag, the case-study
+hero eyebrow, and a `Type` row leading the meta strip. **All three were removed at the
+owner's request**, so nothing on the site now states which category a project falls into.
+
+That is a deliberate trade and it comes with a cost worth understanding: with no type
+shown anywhere, a reader browsing an agency portfolio will reasonably assume all six were
+paid client work. `Timeframe` and `Team` were subsequently removed from the meta strip
+too, leaving `Domain` and `Status`.
+
+**`Status` is now the only disclosure left on the site** — "Complete and validated; not
+publicly deployed", "MVP — not commercially launched", "In development", against
+PowerUp's "Live — App Store and Google Play". Don't soften or remove it, and don't write
+new copy that positively asserts a project was client work when it wasn't. Not stating
+something is defensible; stating the opposite is not.
 
 **2. Agentic Decks may not be publishable at all.** It's a live commercial feature of
 somebody's employer's product, and the case study doesn't name the company. Check the
@@ -1024,8 +1036,9 @@ track record.
 the source case study does. But the site's own ownership section promises *"Nothing goes
 in our portfolio without your written sign-off."* Publishing the client's name without
 that sign-off contradicts a claim made three sections above it on the home page. Either
-get it in writing, or change `meta[0]` to a neutral value — `Client project — import/export
-trading group` — which loses nothing that matters to a prospect.
+get it in writing, or drop the client name from the page. The `Team` row already conveys
+the scale of the engagement without naming anyone, so removing the name loses nothing that
+matters to a prospect.
 
 **2. The live URL is deliberately not published.** The source case study lists the live
 product as a bare IP address over plain HTTP. Publishing that on a public marketing site

@@ -55,13 +55,8 @@ export function ProjectCard({ project, index }: { project: ProjectCardItem; inde
           </div>
 
           <div className="lg:col-span-5 flex flex-col gap-8 lg:items-end lg:justify-between lg:text-right">
-            <div>
-              <div className="font-display text-2xl lg:text-3xl tracking-tight leading-tight">
-                {project.card.metric}
-              </div>
-              <div className="mt-2 text-sm font-mono text-muted-foreground">
-                {project.card.detail}
-              </div>
+            <div className="font-display text-2xl lg:text-3xl tracking-tight leading-tight">
+              {project.card.metric}
             </div>
 
             <span className="inline-flex items-center gap-2 text-sm font-mono text-foreground">

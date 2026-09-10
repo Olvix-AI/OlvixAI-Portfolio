@@ -6,13 +6,14 @@
  * file, so copy edits happen here and nowhere else.
  *
  * Two rules baked into the shape below, both from the copy doc's "honesty checks":
- *  1. Every project carries its true `Type` in `meta[0]` and repeats it as the hero
- *     eyebrow and the first card tag. It is not optional and must not be softened.
+ *  1. The engagement type is no longer shown on the site — it used to lead the card
+ *     tags, the hero eyebrow and a `Type` meta row, and all three were removed. The
+ *     `Status` row is now the only thing carrying that truth; don't soften it.
  *  2. `decisions` is the most valuable content on these pages. It is typed as full
  *     paragraphs, never bullets, and the template gives it its own visual treatment.
  */
 
-/** One row of the Type / Domain / Timeframe / Team / Status strip under the hero. */
+/** One row of the Domain / Status strip under the hero. */
 export interface MetaRow {
   label: string;
   value: string;
@@ -88,18 +89,26 @@ export interface Screenshot {
   src: string;
   alt: string;
   caption?: string;
+  /**
+   * Intrinsic pixel size. Required, because these range from a 2.04 landscape crop to a
+   * 0.33 full-page capture — the gallery sizes each image from its own ratio rather than
+   * forcing everything into one box and cropping the content away.
+   */
+  width: number;
+  height: number;
 }
 
 /** The index card for a project — §A of the copy doc. */
 export interface ProjectCard {
-  /** Exactly three, matching the `>` line under each card heading in §A. */
-  tags: [string, string, string];
+  /**
+   * Domain and surface. The engagement type ("Client engagement", "In-house build",
+   * "Own product") used to lead this list and no longer appears anywhere on the site.
+   */
+  tags: [string, string];
   /** The one-paragraph pitch. */
   pitch: string;
   /** The bolded headline metric. */
   metric: string;
-  /** The muted run-on after the metric, e.g. "8 months · 2 OlvixAI engineers". */
-  detail: string;
 }
 
 /**
@@ -114,8 +123,6 @@ export interface ProjectCard {
 export interface ProjectTeaser {
   /** The one-line pitch, rendered as the large serif line. */
   pitch: string;
-  /** Engagement type, e.g. "Client engagement". */
-  engagement: string;
   /** Domain, e.g. "Health-tech". */
   domain: string;
   /** The "Key Result" figure. */
@@ -148,10 +155,14 @@ export interface Project {
   decisions: Decision[];
   results: Results;
   /**
-   * Intentionally empty for every project. See the TODO on each one: the assets in
-   * `docs/` contain real names, contact details and health data and need a manual
-   * scrub (and a WebP conversion) before they can be copied into `public/`.
-   * The gallery renders nothing at all while this is empty.
+   * Reviewed, resized WebP under `public/work/<slug>/`. Trading Operations, Agentic
+   * Decks and EpochsLab have no assets, and the gallery renders nothing at all for
+   * them rather than an empty grid.
+   *
+   * Anything added here must be looked at first. The raw captures in `docs/` are NOT
+   * all safe: `14. Applicants Page.png` and both resume views carry real names and
+   * personal email addresses (team members used their own accounts as test
+   * applicants), so they are excluded on purpose. Don't add them back.
    */
   screenshots: Screenshot[];
 }
@@ -165,31 +176,23 @@ export const projects: Project[] = [
     teaser: {
       pitch:
         "A B2B wellness platform rebuilt for the web, extended to iOS and Android, and taught to read a blood pressure monitor through the phone camera.",
-      engagement: "Client engagement",
       domain: "Health-tech",
       metric: "Live on both app stores",
     },
-    eyebrow: "Client engagement",
+    eyebrow: "Health-tech",
     oneLiner:
       "A workplace wellness platform rebuilt on the web, extended to iOS and Android, and taught to read a blood pressure monitor through the phone camera.",
     pageTitle: "PowerUp — OlvixAI",
     metaDescription:
       "A B2B wellness platform rebuilt for web and native mobile, with a purpose-trained vision model that reads home health devices through the phone camera.",
     card: {
-      tags: ["Client engagement", "Health-tech", "Web + iOS + Android"],
+      tags: ["Health-tech", "Web + iOS + Android"],
       pitch:
         "A B2B workplace wellness platform, rebuilt on the web and extended to native mobile — with a vision model we trained that reads blood pressure, glucose and heart rate straight off the screen of a home health device, so nobody has to type a number in.",
       metric: "Live on the App Store and Google Play",
-      detail: "8 months · 2 OlvixAI engineers",
     },
     meta: [
-      { label: "Type", value: "Contract engagement — PowerUp Global" },
       { label: "Domain", value: "Health-tech · corporate wellness (B2B)" },
-      { label: "Timeframe", value: "~8 months, web and mobile" },
-      {
-        label: "Team",
-        value: "2 OlvixAI engineers, plus the client's in-house backend developer",
-      },
       { label: "Status", value: "Live — app.powerupglobal.io, App Store and Google Play" },
     ],
     challenge: [
@@ -345,13 +348,62 @@ export const projects: Project[] = [
           label: "Reading types automated",
           value: "Three — blood pressure, blood glucose, heart rate",
         },
-        { label: "Team", value: "Two OlvixAI engineers across web, mobile, ML and DevOps" },
       ],
     },
     // TODO: assets live in `docs/PowerUp/` (4 web) and `docs/PowerUp-App/` (6 mobile).
     // They show real health readings and must be scrubbed — and converted to WebP —
     // before being copied into `public/` and listed here.
-    screenshots: [],
+    screenshots: [
+      {
+        src: "/work/powerup/profile-insights.webp",
+        alt: "PowerUp Profile Insights dashboard showing personal performance score and health rings",
+        caption: "Profile Insights",
+        width: 884,
+        height: 837,
+      },
+      {
+        src: "/work/powerup/health-status.webp",
+        alt: "Health Status screen listing nine wellness dimensions colour-coded green to red",
+        caption: "Health Status detail",
+        width: 1140,
+        height: 838,
+      },
+      {
+        src: "/work/powerup/indicators.webp",
+        alt: "Healthy Living Indicators scored across nine dimensions",
+        caption: "Healthy Living Indicators",
+        width: 727,
+        height: 582,
+      },
+      {
+        src: "/work/powerup/workplace-metrics.webp",
+        alt: "Workplace Key Metrics comparing the user against their organisation",
+        caption: "Workplace Key Metrics",
+        width: 1116,
+        height: 835,
+      },
+      {
+        src: "/work/powerup/mobile-1.webp",
+        alt: "PowerUp mobile app home screen",
+        caption: "Mobile — home",
+        width: 1242,
+        height: 2208,
+      },
+      {
+        src: "/work/powerup/mobile-2.webp",
+        alt: "PowerUp mobile app health tracking screen",
+        caption: "Mobile — tracking",
+        width: 1242,
+        height: 2208,
+      },
+      {
+        src: "/work/powerup/mobile-3.webp",
+        alt: "PowerUp mobile app assessment screen",
+        caption: "Mobile — assessment",
+        width: 1242,
+        height: 2208,
+      },
+    ],
   },
 
   // ─────────────────────────────────────────────── §F · Trading Operations ──
@@ -362,37 +414,25 @@ export const projects: Project[] = [
     teaser: {
       pitch:
         "An import/export trading company's entire operation — enquiry to final payment, across three legal entities — with AI drafting the paperwork and staff approving every decision.",
-      engagement: "Client engagement",
       domain: "B2B operations",
       metric: "Full lifecycle verified live",
     },
-    eyebrow: "Client engagement",
+    eyebrow: "B2B operations",
     oneLiner:
       "An operations platform that runs an import/export trading business from customer enquiry to final payment, with AI drafting the repetitive paperwork and staff approving every decision.",
     pageTitle: "Trading Operations — OlvixAI",
     metaDescription:
       "An operations automation platform for an import/export trading company: an 18-step order lifecycle across three legal entities, with AI-assisted drafting and vendor quote extraction under human approval.",
     card: {
-      tags: ["Client engagement", "B2B operations", "Web app + AI extraction"],
+      tags: ["B2B operations", "Web app + AI extraction"],
       pitch:
         "An import/export trading business ran on spreadsheets, email and a status sheet somebody updated by hand every day. We replaced it with a guided 18-step order lifecycle across three legal entities — RFQs, quote comparison, purchase orders, shipping documents, GST invoicing and payment reconciliation — with AI drafting the repetitive paperwork and pulling line items out of vendor quotes, and staff approving every decision.",
       metric: "Full enquiry-to-paid lifecycle verified live",
-      detail: "Mid-2026 · 7-person ops team, 3 entities",
     },
     meta: [
-      { label: "Type", value: "Client project — SMC Group" },
       {
         label: "Domain",
         value: "Import/export trading · industrial and defence buyers",
-      },
-      {
-        label: "Timeframe",
-        value: "Built and verified mid-2026; live end-to-end verification July 2026",
-      },
-      {
-        label: "Team",
-        value:
-          "Delivered to a 7-person shared operations team running three import/export entities",
       },
       { label: "Status", value: "Verified live end to end" },
     ],
@@ -576,31 +616,23 @@ export const projects: Project[] = [
     teaser: {
       pitch:
         "An agent that writes a real PowerPoint deck from a conversation, then edits any deck you upload without ever corrupting the file.",
-      engagement: "Production feature",
       domain: "Enterprise AI",
       metric: "Live in production",
     },
-    eyebrow: "Production feature",
+    eyebrow: "Enterprise AI",
     oneLiner:
       "An AI agent that writes a complete, on-brand PowerPoint deck from a conversation — then edits any deck you already have, including ones it never wrote.",
     pageTitle: "Agentic Decks — OlvixAI",
     metaDescription:
       "An AI agent that writes complete PowerPoint decks from a conversation, and edits any deck you upload without corrupting the file.",
     card: {
-      tags: ["Production feature", "Enterprise AI", "Agents + document engine"],
+      tags: ["Enterprise AI", "Agents + document engine"],
       pitch:
         "An AI agent that writes a complete, on-brand PowerPoint deck from a conversation — then turns around and edits any deck you upload, including ones it never wrote, without ever producing a file PowerPoint refuses to open.",
       metric: "Live in public production",
-      detail: "Built across 2026 · Sole owner of the module",
     },
     meta: [
-      { label: "Type", value: "Production feature of a commercial AI platform" },
       { label: "Domain", value: "Enterprise AI · document automation" },
-      { label: "Timeframe", value: "Built in stages across 2026; live in public production by August" },
-      {
-        label: "Team",
-        value: "Part of a multi-engineer product team; sole designer and builder of this capability",
-      },
       { label: "Status", value: "Live in production" },
     ],
     challenge: [
@@ -745,32 +777,23 @@ export const projects: Project[] = [
     teaser: {
       pitch:
         "Describe an ML goal in plain English and get back a trained, stored model — data found, code written, GPU job run, and the notebook is yours to export.",
-      engagement: "Own product",
       domain: "MLOps",
       metric: "Plain English in, trained model out",
     },
-    eyebrow: "Own product",
+    eyebrow: "MLOps",
     oneLiner:
       "Describe an ML goal in plain English; get back a trained model, its artifacts, and a live notebook you can export.",
     pageTitle: "EpochsLab — OlvixAI",
     metaDescription:
       "An AI-powered ML automation platform: agents find the data, write the preprocessing and training code, run the job on cloud GPUs, and hand back a stored, exportable model.",
     card: {
-      tags: ["Own product", "MLOps", "Multi-agent + GPU training"],
+      tags: ["MLOps", "Multi-agent + GPU training"],
       pitch:
         "A platform where you describe the model you need in plain English and a team of agents does the pipeline — finds or ingests the data, profiles and cleans it, decides whether to train from scratch or fine-tune, runs the job on cloud GPUs, then stores the trained model and hands you the live notebook it wrote along the way.",
       metric: "Problem description to trained model",
-      detail: "Late 2025 – 2026 · solo build",
     },
     meta: [
-      { label: "Type", value: "Own product — startup build" },
       { label: "Domain", value: "Developer tools · MLOps" },
-      { label: "Timeframe", value: "Late 2025 – 2026" },
-      {
-        label: "Team",
-        value:
-          "Solo — product vision, agent architecture, backend, frontend and system design",
-      },
       { label: "Status", value: "In development" },
     ],
     challenge: [
@@ -948,28 +971,23 @@ export const projects: Project[] = [
     teaser: {
       pitch:
         "Recruitment automation that scores a resume, runs a live voice interview and grades a developer's GitHub — inside one applicant tracking system.",
-      engagement: "In-house build",
       domain: "HR-tech",
       metric: "0.895 agreement with a human recruiter",
     },
-    eyebrow: "In-house build",
+    eyebrow: "HR-tech",
     oneLiner:
       "Recruitment automation that scores a resume, runs a live voice interview, and grades a developer's GitHub — inside one applicant tracking system a small company can afford.",
     pageTitle: "HRXpert — OlvixAI",
     metaDescription:
       "AI recruitment automation: resume scoring, live voice interviewing over WebRTC, and GitHub-based developer evaluation in one applicant tracking system.",
     card: {
-      tags: ["In-house build", "HR-tech", "Voice AI + microservices"],
+      tags: ["HR-tech", "Voice AI + microservices"],
       pitch:
         "Recruitment automation that scores a resume against the job, runs a live voice interview with an AI that asks real follow-up questions, and grades a developer off their GitHub — all inside one affordable applicant tracking system.",
       metric: "0.895 agreement with a human recruiter",
-      detail: "8 months · 3-person team",
     },
     meta: [
-      { label: "Type", value: "In-house build — academic capstone, built to production standard" },
       { label: "Domain", value: "HR-tech · recruitment automation" },
-      { label: "Timeframe", value: "August 2025 – March 2026" },
-      { label: "Team", value: "3 engineers, under academic supervision with industry advisory input" },
       { label: "Status", value: "Complete and validated; not publicly deployed" },
     ],
     challenge: [
@@ -1096,7 +1114,50 @@ export const projects: Project[] = [
     // interviewer and candidate dashboards. The applicant and resume views may contain
     // real names and contact details — scrub, convert to WebP and resize before these
     // are copied into `public/` and listed here.
-    screenshots: [],
+    screenshots: [
+      {
+        src: "/work/hrxpert/admin-dashboard.webp",
+        alt: "HRXpert admin dashboard",
+        caption: "Admin dashboard",
+        width: 1600,
+        height: 1189,
+      },
+      {
+        src: "/work/hrxpert/recruiter-dashboard.webp",
+        alt: "HRXpert recruiter dashboard",
+        caption: "Recruiter dashboard",
+        width: 1600,
+        height: 1189,
+      },
+      {
+        src: "/work/hrxpert/jobs.webp",
+        alt: "Job listings inside the recruiter dashboard",
+        caption: "Jobs",
+        width: 1600,
+        height: 959,
+      },
+      {
+        src: "/work/hrxpert/view-jobs.webp",
+        alt: "Job pipeline view",
+        caption: "View jobs",
+        width: 1600,
+        height: 1648,
+      },
+      {
+        src: "/work/hrxpert/job-viewer.webp",
+        alt: "Single job detail view",
+        caption: "Job detail",
+        width: 1600,
+        height: 1838,
+      },
+      {
+        src: "/work/hrxpert/create-job.webp",
+        alt: "Empty create-job form",
+        caption: "Create job",
+        width: 1600,
+        height: 1945,
+      },
+    ],
   },
 
   // ─────────────────────────────────────────────────────────── §E · KairosAI ──
@@ -1107,32 +1168,23 @@ export const projects: Project[] = [
     teaser: {
       pitch:
         "A job-search platform that structures your resume, scrapes and ranks live listings against it, and fills in the application forms for you.",
-      engagement: "In-house build",
       domain: "Career tools",
       metric: "Three pillars, one candidate profile",
     },
-    eyebrow: "In-house build",
+    eyebrow: "Career tools",
     oneLiner:
       "An end-to-end job-search platform — from \"here is my CV\" to \"the application is submitted\".",
     pageTitle: "KairosAI — OlvixAI",
     metaDescription:
       "A job-search platform that structures your resume, scrapes and ranks live listings against it, and fills in application forms through a browser extension.",
     card: {
-      tags: ["In-house build", "Career tools", "Scraping + browser extension"],
+      tags: ["Career tools", "Scraping + browser extension"],
       pitch:
         "A job-search platform that turns your resume into structured data, collects and ranks live listings against it, runs scored mock interviews, and fills in the application forms through a browser extension that works on sites nobody wrote a rule for.",
       metric: "Three pillars, one candidate profile",
-      detail: "7 months · 3-person team",
     },
     meta: [
-      { label: "Type", value: "In-house build — academic capstone, delivered as a working MVP" },
       { label: "Domain", value: "HR-tech · career tools and job-search automation" },
-      { label: "Timeframe", value: "~7 months" },
-      {
-        label: "Team",
-        value:
-          "3 engineers, split by domain — each owning the database, service and front end for their slice",
-      },
       {
         label: "Status",
         value: "MVP — feature-complete and demonstrable end to end; not commercially launched",
@@ -1294,7 +1346,22 @@ export const projects: Project[] = [
     // TODO: `docs/KairosAI/` holds 2 images, thin for a full page. Capture more from the
     // running MVP (the matching dashboard and the extension on a real form), scrub any
     // personal data, then copy into `public/` and list here.
-    screenshots: [],
+    screenshots: [
+      {
+        src: "/work/kairosai/landing.webp",
+        alt: "KairosAI landing page — upload a resume and get matched to live listings",
+        caption: "Landing page",
+        width: 1600,
+        height: 782,
+      },
+      {
+        src: "/work/kairosai/pricing.webp",
+        alt: "KairosAI pricing — the Starter, Pro and Elite tiers described in the case study",
+        caption: "Pricing tiers",
+        width: 1356,
+        height: 805,
+      },
+    ],
   },
 ];
 

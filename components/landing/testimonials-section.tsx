@@ -7,17 +7,40 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import type { ProjectTeaserItem } from "@/lib/projects";
 
+// Capability categories, not named technologies. The old list mixed the two — "React
+// Native" and "LangGraph" next to "Voice AI" — which read as a stack dump and dated
+// itself every time a library changed. Named tools belong in the stack marquee further
+// down the page; this one answers "can you build the kind of thing I need?".
+//
+// Everything here is demonstrated by at least one of the six case studies. Keep it that
+// way: this sits directly under the work section, so it reads as a claim about the work
+// above it, not a wish list.
 const buildsWith = [
-  "Voice AI",
   "AI agents",
+  "Voice AI",
+  "Chat interfaces",
   "Computer vision",
+  "Custom model training",
+  "Fine-tuning",
   "RAG",
-  "React Native",
-  "Microservices",
-  "MCP tool servers",
-  "LangGraph",
-  "DevOps",
+  "Document AI",
+  "Data extraction",
+  "Model evaluation",
+  "Human-in-the-loop",
+  "Workflow automation",
+  "Recommendation engines",
+  "Web apps",
+  "Mobile apps",
   "Browser extensions",
+  "Dashboards",
+  "UI/UX design",
+  "APIs and backends",
+  "Microservices",
+  "Auth and access control",
+  "Cloud infrastructure",
+  "CI/CD",
+  "Monitoring",
+  "Load and security testing",
 ];
 
 export function TestimonialsSection({ projects }: { projects: ProjectTeaserItem[] }) {
@@ -108,7 +131,7 @@ export function TestimonialsSection({ projects }: { projects: ProjectTeaserItem[
                           <ArrowRight className="w-4 h-4 opacity-0 -translate-x-1 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0" />
                         </span>
                         <span className="block text-muted-foreground">
-                          {project.teaser.engagement}, {project.teaser.domain}
+                          {project.teaser.domain}
                         </span>
                       </span>
                     </Link>

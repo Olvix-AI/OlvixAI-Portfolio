@@ -7,12 +7,15 @@ import { MEASURE } from "./project-section";
 
 /**
  * Renders nothing at all when there are no screenshots — not an empty grid, not a
- * placeholder. Every project's `screenshots` array is currently empty on purpose: the
- * assets in `docs/` contain real names, contact details and health data and need a
- * manual scrub before they can go in `public/`.
+ * placeholder. Projects with no assets simply don't get the section.
+ *
+ * Layout is CSS multi-column rather than a grid. These captures range from a 2.04
+ * landscape crop to a 1242x2208 phone screen, and a grid with a fixed aspect ratio
+ * either crops the content away or leaves huge gaps. Columns let every image keep its
+ * own height and pack naturally.
  *
  * `next.config.mjs` sets `images.unoptimized: true`, so whatever lands here ships at
- * full weight — resize and convert to WebP during the scrub.
+ * full weight — convert to WebP and resize before this goes anywhere public.
  */
 export function ScreenshotGallery({
   screenshots,
@@ -40,34 +43,32 @@ export function ScreenshotGallery({
           </h2>
         </div>
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        <div className="columns-1 md:columns-2 gap-6 lg:gap-8 [column-fill:balance]">
           {screenshots.map((shot, index) => (
-            <li
+            <figure
               key={shot.src}
-              className={`transition-all duration-700 ${
+              // `break-inside-avoid` stops a card being split across two columns.
+              className={`mb-6 lg:mb-8 break-inside-avoid border border-foreground/10 bg-foreground/[0.02] transition-all duration-700 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
               style={{ transitionDelay: `${index * 80}ms` }}
             >
-              <figure className="border border-foreground/10 bg-foreground/[0.02]">
-                <div className="relative aspect-[16/10] overflow-hidden">
-                  <Image
-                    src={shot.src}
-                    alt={shot.alt || `${projectName} screenshot`}
-                    fill
-                    sizes="(min-width: 768px) 50vw, 100vw"
-                    className="object-cover object-top"
-                  />
-                </div>
-                {shot.caption ? (
-                  <figcaption className="px-5 py-4 border-t border-foreground/10 text-sm font-mono text-muted-foreground">
-                    {shot.caption}
-                  </figcaption>
-                ) : null}
-              </figure>
-            </li>
+              <Image
+                src={shot.src}
+                alt={shot.alt || `${projectName} screenshot`}
+                width={shot.width}
+                height={shot.height}
+                sizes="(min-width: 768px) 50vw, 100vw"
+                className="w-full h-auto block"
+              />
+              {shot.caption ? (
+                <figcaption className="px-5 py-4 border-t border-foreground/10 text-sm font-mono text-muted-foreground">
+                  {shot.caption}
+                </figcaption>
+              ) : null}
+            </figure>
           ))}
-        </ul>
+        </div>
       </div>
     </section>
   );

@@ -10,15 +10,21 @@ import { AnimatedSphere } from "./animated-sphere";
 
 const words = ["ships", "scales", "works", "lasts"];
 
-// Every figure here is verifiable from the case study it names. Nothing rounded up,
-// nothing from a project that cannot back it.
+// Outcomes only — what shipped, at what scale. Deliberately no internal engineering
+// metrics here (test counts, latency, security checks); those live on the case-study
+// pages, where a reader has the context to weigh them. A hero strip is read in about a
+// second, so every line has to land without decoding.
+//
+// Every figure is verifiable from the case study it names. Two rules when editing:
+// nothing rounded up, and nothing claimed for a project that cannot back it. In
+// particular "in production" means live for real users — that is PowerUp, Trading
+// Operations and Agentic Decks only. HRXpert was never publicly deployed, KairosAI
+// never launched, and EpochsLab is still in development.
 const stats = [
-  { value: "0.895", label: "agreement with a human recruiter", company: "HRXPERT" },
   { value: "2", label: "app stores, shipped and live", company: "POWERUP" },
-  { value: "15/15", label: "adversarial RBAC checks passed", company: "TRADING OPS" },
-  { value: "<320ms", label: "P95 API latency at 4x load", company: "HRXPERT" },
-  { value: "18", label: "step order lifecycle, verified live", company: "TRADING OPS" },
-  { value: "8 mo", label: "web rebuild plus native app", company: "POWERUP" },
+  { value: "3", label: "legal entities on one platform", company: "TRADING OPS" },
+  { value: "21", label: "slide designs live in production", company: "AGENTIC DECKS" },
+  { value: "8 mo", label: "idea to two live apps", company: "POWERUP" },
 ];
 
 export function HeroSection() {

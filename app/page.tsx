@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/landing/hero-section";
 import { ServicesSection } from "@/components/landing/services-section";
 import { InfrastructureSection } from "@/components/landing/infrastructure-section";
 import { TestimonialsSection } from "@/components/landing/testimonials-section";
+import { ClientQuotesSection } from "@/components/landing/client-quotes-section";
 import { FeaturesSection } from "@/components/landing/features-section";
 import { HowItWorksSection } from "@/components/landing/how-it-works-section";
 import { IntegrationsSection } from "@/components/landing/integrations-section";
@@ -30,6 +31,7 @@ export default function Home() {
       <ServicesSection />
       <InfrastructureSection />
       <TestimonialsSection projects={projectTeasers} />
+      <ClientQuotesSection />
       <FeaturesSection />
       <HowItWorksSection />
       <IntegrationsSection />
