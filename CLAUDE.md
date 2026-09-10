@@ -78,6 +78,20 @@ $env:NEXT_DIST_DIR='.next-verify'; npm run build
 With `output: 'export'` that also relocates the exported site, so the finished HTML is in
 `.next-verify/` (gitignored), not `out/`. A real deploy still needs a normal build.
 
+**The live site is https://olvix.io**, served from the root of the custom domain, so CI
+builds with **no** basePath. The domain is set in Settings > Pages; publishing from a
+GitHub Actions workflow means Pages ignores `public/CNAME`, so there isn't one. DNS is at
+Namecheap: four A records to GitHub Pages, and MX to Zoho — **never touch the MX records**,
+that is `hello@olvix.io`.
+
+Two traps if the URL ever changes:
+- Set `NEXT_PUBLIC_BASE_PATH` in the workflow if it goes back to a `github.io` subpath.
+  Without it every asset resolves against the wrong origin path and 404s.
+- `next/image` does **not** apply basePath when `unoptimized: true`. The screenshot
+  gallery prefixes it manually. Verifying assets by fetching `<basePath><src>` proves the
+  file exists, not that the markup resolves — read the `src` out of the built HTML and
+  fetch exactly that.
+
 If a dev server has already been broken this way: stop it, `Remove-Item -Recurse -Force
 .next`, then `npm run dev`.
 

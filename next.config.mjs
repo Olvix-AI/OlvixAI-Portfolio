@@ -5,11 +5,13 @@
  * contact form ever needs a real server endpoint it has to be an external service, not
  * an `app/api/**` route.
  *
- * Pages serves a project repo from a subpath (olvix-ai.github.io/OlvixAI-Portfolio), so
- * basePath and assetPrefix have to match it or every asset 404s. It's read from the
- * environment rather than hardcoded so a local `npm run build` still produces a
- * root-relative site, and so moving to olvix.io later is a one-line change in
- * .github/workflows/deploy.yml (clear the value, add public/CNAME).
+ * The site is served from the root of olvix.io, so basePath is empty and this is left
+ * unset in CI. It stays configurable because a project repo served from
+ * olvix-ai.github.io/OlvixAI-Portfolio needs basePath and assetPrefix to match that
+ * subpath or every asset 404s — set NEXT_PUBLIC_BASE_PATH to reproduce that.
+ *
+ * Note `next/image` does NOT apply basePath when `unoptimized: true`; the screenshot
+ * gallery prefixes this value itself. See components/portfolio/screenshot-gallery.tsx.
  */
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? ''
 

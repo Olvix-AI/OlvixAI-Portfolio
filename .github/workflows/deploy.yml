@@ -38,10 +38,14 @@ jobs:
         run: npx tsc --noEmit
 
       - name: Build static export
-        # Pages serves this repo from /OlvixAI-Portfolio. To move to a custom domain,
-        # clear this value and add a public/CNAME file containing the domain.
-        env:
-          NEXT_PUBLIC_BASE_PATH: /OlvixAI-Portfolio
+        # Served from the root of the custom domain olvix.io, so no basePath. The domain
+        # itself is configured in Settings > Pages, not in a CNAME file: when publishing
+        # from a GitHub Actions workflow, Pages ignores public/CNAME entirely.
+        #
+        # If this ever goes back to olvix-ai.github.io/OlvixAI-Portfolio, restore:
+        #   env:
+        #     NEXT_PUBLIC_BASE_PATH: /OlvixAI-Portfolio
+        # Without it, every asset resolves against the wrong origin path and 404s.
         run: npm run build
 
       # Pages runs Jekyll by default, which silently drops any directory starting with an
