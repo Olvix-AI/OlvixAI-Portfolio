@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { LogoMark } from "@/components/logo-mark";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
@@ -82,8 +83,8 @@ export function Navigation() {
         >
           {/* Logo */}
           <Link href="/" className={`flex items-center gap-2 group rounded-sm ${focusRing}`}>
-            <span className={`font-display tracking-tight transition-all duration-500 ${isScrolled ? "text-xl" : "text-2xl"}`}>OlvixAI</span>
-            <span className={`text-muted-foreground font-mono transition-all duration-500 ${isScrolled ? "text-[10px] mt-0.5" : "text-xs mt-1"}`}>.io</span>
+            <LogoMark className={`transition-all duration-500 ${isScrolled ? "h-7" : "h-9"}`} />
+            <span className={`font-display tracking-tight transition-all duration-500 ${isScrolled ? "text-xl" : "text-2xl"}`}>Olvix</span>
           </Link>
 
           {/* Desktop Navigation */}
