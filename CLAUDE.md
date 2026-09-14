@@ -244,9 +244,23 @@ Every file in `components/landing/` follows the same shape. Match it when adding
     header: a string body sends `text/plain;charset=UTF-8`, which is CORS safelisted, so
     the browser skips the preflight OPTIONS that Apps Script cannot answer. And
     ContentService **cannot set a status code** — every response is 200, so success is
-    read from `ok` in the body, not from `res.ok` alone. Never reach for
-    `mode: "no-cors"`; an opaque response can't be inspected, so every failure would
-    read as success.
+    read from `ok` in the body, not from `res.ok` alone.
+  - **Google's reply is not reliably readable, and that is designed around, not a bug
+    to fix.** The POST gets a 302 across to `script.googleusercontent.com`, and the
+    browser's cross-origin read of that hop fails intermittently — worse in private
+    windows, and it has also been seen returning a 404 or the `doGet` body instead. The
+    POST always lands; only the answer is lost. So an unreadable reply is retried once
+    as an opaque `mode: "no-cors"` request, which completes if the request went out and
+    rejects only if the network is down. A reply that *can* be read is still trusted —
+    a non-OK status or `ok: false` throws. Don't "simplify" this back to one plain
+    fetch: that is what made the form tell people their message failed after it had
+    already arrived.
+  - **`submissionId` is what makes that retry safe** — the script remembers handled ids
+    for 6h in `CacheService` and won't write the same message twice. Removing it
+    reintroduces duplicate rows.
+  - The target spreadsheet is set as a **script property** (`SPREADSHEET_ID`), not a
+    constant, so pasting the repo file into the editor can't wipe it. Standalone
+    scripts need it; a sheet-bound one doesn't.
   - Editing the script does not update the live app. Deploy > Manage deployments >
     pencil > **Version: New version**, which keeps the same URL.
   - The contract to preserve: it resolves on success and **throws** on failure; the
