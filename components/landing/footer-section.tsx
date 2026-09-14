@@ -22,7 +22,7 @@ const services: FooterLink[] = [
 const company: FooterLink[] = [
   { name: "Get a quote", href: "/contact" },
   { name: "FAQ", href: "/#faq" },
-  { name: "hello@olvix.io", href: "mailto:hello@olvix.io" },
+  { name: "email@olvix.io", href: "mailto:email@olvix.io" },
 ];
 
 const legal: FooterLink[] = [
@@ -32,7 +32,7 @@ const legal: FooterLink[] = [
 ];
 
 const socialLinks = [
-  { name: "LinkedIn", href: "#" },
+  { name: "LinkedIn", href: "https://www.linkedin.com/company/olvixai/about/?viewAsMember=true" },
   { name: "GitHub", href: "#" },
   { name: "X", href: "#" },
 ];

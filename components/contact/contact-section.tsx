@@ -38,13 +38,12 @@ const NEXT_STEPS = [
 // call" row renders itself. Left null so the page never ships a dead link.
 const BOOK_A_CALL_URL: string | null = null;
 
-// TODO(open-item-5): confirm the LinkedIn company slug.
 const CONTACT_METHODS: { label: string; value: string; href: string }[] = [
-  { label: "Email", value: "hello@olvix.io", href: "mailto:hello@olvix.io" },
+  { label: "Email", value: "email@olvix.io", href: "mailto:email@olvix.io" },
   {
     label: "LinkedIn",
-    value: "/company/olvix",
-    href: "https://www.linkedin.com/company/olvix",
+    value: "/company/olvixai",
+    href: "https://www.linkedin.com/company/olvixai/about/?viewAsMember=true",
   },
   ...(BOOK_A_CALL_URL
     ? [{ label: "Book a call", value: BOOK_A_CALL_URL, href: BOOK_A_CALL_URL }]

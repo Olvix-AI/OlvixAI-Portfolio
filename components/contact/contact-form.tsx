@@ -65,7 +65,7 @@ type Status = "idle" | "submitting" | "success" | "error";
  *
  *   The route handler must re-validate server side (`zod` is already a
  *   dependency — client validation below is a UX affordance, not a control),
- *   send to the SHARED inbox hello@olvix.io, and needs RESEND_API_KEY plus a
+ *   send to the SHARED inbox email@olvix.io, and needs RESEND_API_KEY plus a
  *   verified sending domain on olvix.io.
  *
  * Either way also add Cloudflare Turnstile — the honeypot below is the free
@@ -143,7 +143,7 @@ const SUCCESS = {
 const FAILURE = {
   heading: "That didn't send.",
   bodyBefore: "Something on our end. Email ",
-  email: "hello@olvix.io",
+  email: "email@olvix.io",
   bodyAfter:
     " and we'll pick it up from there — your message is worth more to us than our form is.",
 };
@@ -776,10 +776,10 @@ export function ContactForm() {
         <p className="mt-5 text-sm text-muted-foreground">
           Or email{" "}
           <a
-            href="mailto:hello@olvix.io"
+            href="mailto:email@olvix.io"
             className={`text-foreground ${LINK}`}
           >
-            hello@olvix.io
+            email@olvix.io
           </a>{" "}
           directly.
         </p>

@@ -82,7 +82,7 @@ With `output: 'export'` that also relocates the exported site, so the finished H
 builds with **no** basePath. The domain is set in Settings > Pages; publishing from a
 GitHub Actions workflow means Pages ignores `public/CNAME`, so there isn't one. DNS is at
 Namecheap: four A records to GitHub Pages, and MX to Zoho — **never touch the MX records**,
-that is `hello@olvix.io`.
+that is `email@olvix.io`.
 
 Two traps if the URL ever changes:
 - Set `NEXT_PUBLIC_BASE_PATH` in the workflow if it goes back to a `github.io` subpath.

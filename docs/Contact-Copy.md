@@ -98,7 +98,7 @@ Mono numerals, three rows, same treatment as the `I / II / III` steps on the hom
 ### Other ways to reach us
 
 ```
-Email        hello@olvix.io
+Email        email@olvix.io
 LinkedIn     /company/olvix
 Book a call  <Calendly or Cal.com link>
 ```
@@ -227,7 +227,7 @@ We'll only use this to reply to you. Nothing else, no list, no sharing.
 button:      Send it
              (bg-foreground text-background, rounded-full, h-14, with the ArrowRight)
 pending:     Sending…
-sub-line:    Or email hello@olvix.io directly.
+sub-line:    Or email email@olvix.io directly.
 ```
 
 ---
@@ -253,7 +253,7 @@ What you're building → A sentence is enough to start.
 **Submit failure** — the one everyone forgets to write, and the one that loses the lead.
 ```
 Heading:  That didn't send.
-Body:     Something on our end. Email hello@olvix.io and we'll pick it up from there —
+Body:     Something on our end. Email email@olvix.io and we'll pick it up from there —
           your message is worth more to us than our form is.
 ```
 
@@ -292,7 +292,7 @@ else's dashboard and the free tiers brand the confirmation email.
 change.
 
 **2 · Next.js route handler + a transactional email API** — Resend or Postmark.
-`app/api/contact/route.ts`, validate with `zod`, send to `hello@olvix.io`. ~50 lines. You own
+`app/api/contact/route.ts`, validate with `zod`, send to `email@olvix.io`. ~50 lines. You own
 the flow, submissions arrive as real email, no third-party branding. Needs one env var
 (`RESEND_API_KEY`) and a verified sending domain — which means DNS records on olvix.io.
 *Worth doing within the first month.*
@@ -335,7 +335,7 @@ the FAQ items at the bottom help with that.
 | # | Item | Blocks |
 |---|---|---|
 | 1 | Pick a form backend (option 1, 2 or 3 above) | The page functioning at all |
-| 2 | Confirm `hello@olvix.io`, and that it goes to a shared inbox | The page, the footer |
+| 2 | Confirm `email@olvix.io`, and that it goes to a shared inbox | The page, the footer |
 | 3 | Set the real budget bands — what's your floor? | Field 7 |
 | 4 | Calendly / Cal.com link, if you want one | "Other ways to reach us" |
 | 5 | LinkedIn company URL | "Other ways to reach us", footer |

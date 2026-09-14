@@ -1,67 +1,37 @@
 "use client";
 
-// What clients say — real testimonials section (Homepage-Copy.md, new).
+// What clients say — the real client-quote section (Homepage-Copy.md).
 //
 // NOT the same thing as `testimonials-section.tsx`, which despite its filename is the
-// "Selected work" teaser for /portfolio. This is the actual client-quote section.
+// "Selected work" teaser for /portfolio.
 //
-// ─────────────────────────────────────────────────────────────────────────────────
-//  THE QUOTES BELOW ARE PLACEHOLDERS. THEY ARE NOT REAL AND MUST NOT SHIP.
+// These are REAL and verifiable, transcribed verbatim from docs/testimonials.md — they
+// are freelance-platform reviews of Muhammad Nabeel's work, published with the reviewer
+// handle rather than an invented name and company. That is the honest presentation: the
+// handles are what the reviewers actually chose to be known by, and anyone can check
+// them on the platform. Do not "improve" a handle into a plausible full name.
 //
-//  While `IS_PLACEHOLDER` is true this section renders in `npm run dev` only and is
-//  omitted from every production build, so it cannot reach the live site by accident.
-//  That guard exists because fabricated social proof is the one mistake on a site like
-//  this that cannot be walked back, and because the Ownership section three blocks
-//  further down promises nothing appears in the portfolio without written sign-off.
-//
-//  To go live:
-//    1. Replace every entry in `quotes` with a real, verbatim quote.
-//    2. Fill in the real name, role and company — no bracketed placeholders left.
-//    3. Get written sign-off from each person for that exact wording.
-//    4. Set IS_PLACEHOLDER to false.
-//    5. Add <ClientQuotesSection /> back if it was removed from app/page.tsx.
-// ─────────────────────────────────────────────────────────────────────────────────
+// Two rules for anything added here:
+//   1. Verbatim only, and only with the reviewer's sign-off if it is not already public.
+//   2. No invented metrics. Every number on this site has to be checkable.
 
 import { useEffect, useRef, useState } from "react";
 
-const IS_PLACEHOLDER = true;
-
-// `process.env.NODE_ENV` is inlined by the bundler, so this is a build-time constant —
-// the production build drops the section entirely rather than deciding at runtime.
-const HIDDEN_IN_PRODUCTION =
-  IS_PLACEHOLDER && process.env.NODE_ENV === "production";
-
-/**
- * Quote text is written to a realistic length so the layout is honest to design
- * against. Attribution is deliberately bracketed so no one can mistake a placeholder
- * for a real customer. Note that none of these invent a metric — if a real quote comes
- * back with a number in it, that number needs to be checkable like every other figure
- * on this site.
- */
 const quotes = [
   {
     quote:
-      "They shipped the thing we had been describing to agencies for a year. The difference was that they also ran it after launch — we never had to go and find somebody else for the infrastructure.",
-    author: "[Client name]",
-    role: "[Role]",
-    company: "[Company]",
-    project: "PowerUp",
+      "He is so polite and understands the content and very professional.",
+    author: "walaa17",
+    source: "5.0 / 5",
+    project:
+      "A RAG system that drafts RFP documents to Saudi regulations, and checks existing RFPs for compliance gaps.",
   },
   {
-    quote:
-      "We had a prototype that impressed everyone in the room and fell over the moment real users touched it. They rebuilt it properly, and it has been quiet ever since.",
-    author: "[Client name]",
-    role: "[Role]",
-    company: "[Company]",
-    project: "Trading Operations",
-  },
-  {
-    quote:
-      "Weekly demos against a real environment, and commit access from the first day. There was never a point where we did not know exactly what we were paying for.",
-    author: "[Client name]",
-    role: "[Role]",
-    company: "[Company]",
-    project: "PowerUp",
+    quote: "Nice working with him",
+    author: "neotastisch_2",
+    source: "4.3 / 5",
+    project:
+      "Fine-tuning an OpenAI model in Python, with a pipeline that converts WhatsApp chat exports into a trainable format.",
   },
 ];
 
@@ -69,8 +39,6 @@ export function ClientQuotesSection() {
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Hooks run unconditionally; the early return below sits after them so the rules of
-  // hooks hold even though the condition is a build-time constant.
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -82,8 +50,6 @@ export function ClientQuotesSection() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
-
-  if (HIDDEN_IN_PRODUCTION) return null;
 
   return (
     <section
@@ -109,45 +75,33 @@ export function ClientQuotesSection() {
           </h2>
         </div>
 
-        {IS_PLACEHOLDER && (
-          <div className="mb-12 border border-dashed border-foreground/30 bg-foreground/[0.03] px-6 py-4">
-            <p className="font-mono text-xs leading-relaxed text-foreground/70">
-              PLACEHOLDER CONTENT — VISIBLE IN DEV ONLY
-              <br />
-              <span className="text-muted-foreground">
-                These quotes are invented and the attributions are not real people. This
-                section is omitted from production builds. Replace the `quotes` array in{" "}
-                client-quotes-section.tsx with signed-off quotes, then set
-                IS_PLACEHOLDER to false.
-              </span>
-            </p>
-          </div>
-        )}
-
-        {/* Quotes */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Two cards, so a two-column grid rather than three — a third empty column
+            reads as a missing testimonial. Capped so the pair doesn't stretch to 1400px. */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-4xl">
           {quotes.map((item, index) => (
             <figure
-              key={index}
+              key={item.author}
               className={`flex flex-col border border-foreground/10 p-8 transition-all duration-700 ${
                 isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
               }`}
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <blockquote className="flex-1">
-                <p className="text-lg leading-relaxed text-foreground/80">
-                  {item.quote}
+                <p className="text-xl lg:text-2xl leading-relaxed text-foreground/80">
+                  &ldquo;{item.quote}&rdquo;
                 </p>
               </blockquote>
 
               <figcaption className="mt-8 pt-6 border-t border-foreground/10">
-                <div className="font-medium">{item.author}</div>
-                <div className="text-sm text-muted-foreground">
-                  {item.role}, {item.company}
+                <div className="flex items-baseline justify-between gap-4">
+                  <span className="font-medium">{item.author}</span>
+                  <span className="font-mono text-xs text-muted-foreground shrink-0">
+                    {item.source}
+                  </span>
                 </div>
-                <div className="mt-3 font-mono text-xs text-muted-foreground">
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
                   {item.project}
-                </div>
+                </p>
               </figcaption>
             </figure>
           ))}

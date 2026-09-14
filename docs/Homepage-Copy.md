@@ -182,7 +182,7 @@ Per-page titles (needed once there's more than one route):
 | Wordmark | `OlvixAI` |
 | Superscript beside wordmark (currently `TM`) | `.io` — reads as the domain and doubles as a claim you can keep. Use `TM` only if the mark is registered. |
 | Domain | olvix.io |
-| Contact email | `hello@olvix.io` (assumed — confirm) |
+| Contact email | `email@olvix.io` (assumed — confirm) |
 
 ### Anchor IDs
 
@@ -877,7 +877,7 @@ const footerLinks = {
   Company: [
     { name: "Get a quote",      href: "/contact" },
     { name: "FAQ",              href: "/#faq" },
-    { name: "hello@olvix.io",   href: "mailto:hello@olvix.io" },
+    { name: "email@olvix.io",   href: "mailto:email@olvix.io" },
   ],
   Legal: [
     { name: "Privacy",          href: "#" },
@@ -956,7 +956,7 @@ staggered `transitionDelay` — plus one unused shadcn primitive.
 | # | Item | Blocks |
 |---|---|---|
 | 1 | **Contact form backend** — nothing in this repo can receive a submission. Options in [Contact-Copy.md](Contact-Copy.md). | `/contact`, and therefore every CTA on the site |
-| 2 | **`hello@olvix.io`** — confirm the real address | Footer, contact page |
+| 2 | **`email@olvix.io`** — confirm the real address | Footer, contact page |
 | 3 | **Security badges sign-off** (§9) — confirm the certification chips come down | §9 |
 | 4 | **Case-study labelling** — confirm publishing HRXpert and KairosAI as in-house builds | §5, portfolio |
 | 5 | **NDA check on Agentic Decks** — it's an employer's production feature | §5, portfolio |
