@@ -131,6 +131,9 @@ lib/
   projects.ts           # ALL case-study content + the home page teaser copy
   utils.ts              # cn()
 docs/                   # the copy source of truth — see "What this is"
+scripts/
+  contact-apps-script.gs  # the contact form's backend, deployed by hand to Google
+                          #   Apps Script. Not built or bundled — see the gotchas.
 ```
 
 `app/page.tsx` is a flat list of sections. To add/remove/reorder one, edit that file and

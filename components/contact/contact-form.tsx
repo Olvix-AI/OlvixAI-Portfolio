@@ -55,9 +55,39 @@ const CONTACT_ENDPOINT =
   "https://script.google.com/macros/s/AKfycbzyhnAHErGTDrZE69oqXi5VECBPEqUrgqYzeKJ5F_LUHkzdeOAUUZfp-PGDGP8WGre09Q/exec";
 
 /**
+ * Idempotency key. Only has to be unique across one person's retries of one
+ * message, so a timestamp and some randomness is a fine fallback where
+ * `crypto.randomUUID` is missing (older browsers, or a non-secure context).
+ */
+function newSubmissionId(): string {
+  try {
+    return crypto.randomUUID();
+  } catch {
+    return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+}
+
+/**
  * Resolves on success, THROWS on failure. Everything else in this file — all
  * four states, the error summary, the draft — is built on that contract and
  * needs no changes if the backend is ever swapped again.
+ *
+ * The awkward part is what "failure" means here. Google answers a POST with a
+ * 302 across to script.googleusercontent.com, and the browser's cross-origin
+ * read of that second hop fails intermittently — fine in one session, blocked
+ * in the next, and more often in private windows. The POST itself always
+ * lands: the row is written and the mail is sent. Only the reply is lost.
+ *
+ * Calling that a failure is the worst outcome available, because the message
+ * did arrive and we would be telling the sender it did not. So an unreadable
+ * reply is not a failure — it is retried once as an opaque `no-cors` request,
+ * which completes whenever the network is up and rejects when it genuinely is
+ * not. `submissionId` is what makes the retry safe: the script remembers ids it
+ * has already handled, so the same message cannot be written twice.
+ *
+ * A reply we *can* read is still trusted completely. An HTTP error status or an
+ * explicit `ok: false` means the endpoint understood us and said no, and no
+ * amount of retrying changes that, so those still throw.
  */
 async function submitContactForm(data: ContactFormValues): Promise<void> {
   if (!CONTACT_ENDPOINT) {
@@ -80,42 +110,69 @@ async function submitContactForm(data: ContactFormValues): Promise<void> {
     return;
   }
 
-  const res = await fetch(CONTACT_ENDPOINT, {
-    method: "POST",
-    // No Content-Type header, deliberately. Passing a string body makes fetch
-    // send `text/plain;charset=UTF-8`, which is CORS-safelisted, so the browser
-    // skips the preflight OPTIONS request — and Apps Script cannot answer one.
-    // Setting `application/json` here is the single most common way to break
-    // this integration; the failure looks like a generic CORS error.
-    body: JSON.stringify(data),
-    // Apps Script answers with a 302 across to script.googleusercontent.com.
-    // Following it is what makes the response readable: the final hop is the
-    // one carrying `Access-Control-Allow-Origin`. Never use `mode: "no-cors"`
-    // to silence this — an opaque response cannot be inspected, so every
-    // failure would read as a success and the throw contract above would be a
-    // lie.
-    redirect: "follow",
-  });
+  // No Content-Type header anywhere below, deliberately. Passing a string body
+  // makes fetch send `text/plain;charset=UTF-8`, which is CORS-safelisted, so
+  // the browser skips the preflight OPTIONS request — and Apps Script cannot
+  // answer one. Setting `application/json` is the single most common way to
+  // break this integration, and it surfaces as a generic CORS error that looks
+  // unrelated to the header you just added.
+  const body = JSON.stringify({ ...data, submissionId: newSubmissionId() });
 
-  if (!res.ok) {
-    throw new Error(`Contact endpoint responded ${res.status}`);
-  }
-
-  // ContentService cannot set a status code — a rejected submission still comes
-  // back 200. The verdict is in the body, so an unparseable body (Apps Script
-  // renders its own HTML page when the script itself throws) is a failure too.
-  let payload: { ok?: boolean; error?: string };
+  let res: Response | undefined;
   try {
-    payload = JSON.parse(await res.text());
+    res = await fetch(CONTACT_ENDPOINT, {
+      method: "POST",
+      body,
+      // Following the 302 is what makes the reply readable at all: the final
+      // hop is the one carrying `Access-Control-Allow-Origin`.
+      redirect: "follow",
+    });
   } catch {
-    throw new Error("Contact endpoint returned a non-JSON response");
+    // No readable response at all. Either the read was blocked or the network
+    // is down, and from here those are indistinguishable — the retry below is
+    // what tells them apart.
+    res = undefined;
   }
 
-  if (!payload.ok) {
-    throw new Error(
-      payload.error ?? "Contact endpoint rejected the submission",
-    );
+  if (res) {
+    // We read a status, so the cross-origin read worked and the endpoint really
+    // is unhappy. Retrying would only be told the same thing again.
+    if (!res.ok) {
+      throw new Error(`Contact endpoint responded ${res.status}`);
+    }
+
+    // ContentService cannot set a status code — a rejected submission still
+    // comes back 200, so the verdict is in the body.
+    let payload: { ok?: boolean; error?: string } | undefined;
+    try {
+      payload = JSON.parse(await res.text());
+    } catch {
+      // 200, but not JSON. Apps Script renders its own HTML page when the
+      // script throws, so the message may or may not have landed. Fall through
+      // and let the deduplicated retry settle it.
+      payload = undefined;
+    }
+
+    if (payload) {
+      if (!payload.ok) {
+        throw new Error(
+          payload.error ?? "Contact endpoint rejected the submission",
+        );
+      }
+      return;
+    }
   }
+
+  // Deliver it again, opaquely. There is nothing to read here, so there is
+  // nothing to be blocked from reading — this resolves whenever the request
+  // physically went out, and rejects when the network is genuinely down, which
+  // is the one failure worth reporting. The submissionId above means the script
+  // discards this if the first attempt already landed.
+  await fetch(CONTACT_ENDPOINT, {
+    method: "POST",
+    mode: "no-cors",
+    body,
+  });
 }
 
 /* ==========================================================================
