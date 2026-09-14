@@ -17,7 +17,25 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// Ordered strongest first: a named CEO at a named company outranks a platform handle,
+// and a specific quote outranks a one-liner. `role` is omitted where the reviewer is
+// only known by a handle — don't invent a title to fill the gap.
 const quotes = [
+  {
+    quote:
+      "Talha did a great job helping us to collect relevant data for our AI Solution. He has good hands on data research and data entry.",
+    author: "Mesut Yilmaz",
+    role: "Founder & CEO, STIA Systems GmbH",
+    source: "LinkedIn · Nov 2025",
+    project: "Data research and collection for an AI solution.",
+  },
+  {
+    quote:
+      "Working with Adeen was a great experience — reliable, skilled, and easy to communicate with. I highly recommend him for any mobile app or React Native development needs.",
+    author: "Kostas L.",
+    source: "Verified · Aug 2025",
+    project: "Mobile app development in React Native.",
+  },
   {
     quote:
       "He is so polite and understands the content and very professional.",
@@ -75,9 +93,10 @@ export function ClientQuotesSection() {
           </h2>
         </div>
 
-        {/* Two cards, so a two-column grid rather than three — a third empty column
-            reads as a missing testimonial. Capped so the pair doesn't stretch to 1400px. */}
-        <div className="grid md:grid-cols-2 gap-6 max-w-4xl">
+        {/* Four cards in a 2x2. Deliberately not three columns: four across a 1400px
+            container leaves each quote too narrow to read, and a 3+1 layout strands one
+            card on its own row. */}
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl">
           {quotes.map((item, index) => (
             <figure
               key={item.author}
@@ -99,6 +118,9 @@ export function ClientQuotesSection() {
                     {item.source}
                   </span>
                 </div>
+                {"role" in item && item.role ? (
+                  <div className="mt-1 text-sm text-muted-foreground">{item.role}</div>
+                ) : null}
                 <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
                   {item.project}
                 </p>
