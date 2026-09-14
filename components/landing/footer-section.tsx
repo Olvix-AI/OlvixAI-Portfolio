@@ -25,16 +25,16 @@ const company: FooterLink[] = [
   { name: "email@olvix.io", href: "mailto:email@olvix.io" },
 ];
 
+// Privacy and Terms were placeholders pointing at "#", and neither document
+// exists yet. Better absent than a link that goes nowhere; add them back when
+// there is something real to link to.
 const legal: FooterLink[] = [
-  { name: "Privacy", href: "#" },
-  { name: "Terms", href: "#" },
   { name: "Ownership", href: "/#ownership" },
 ];
 
 const socialLinks = [
   { name: "LinkedIn", href: "https://www.linkedin.com/company/olvixai/about/?viewAsMember=true" },
-  { name: "GitHub", href: "#" },
-  { name: "X", href: "#" },
+  { name: "X", href: "https://x.com/OlvixAI" },
 ];
 
 const focusRing =
