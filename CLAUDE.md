@@ -227,14 +227,28 @@ Every file in `components/landing/` follows the same shape. Match it when adding
   `requestAnimationFrame`. They are not 3D and use no library.
 - `how-it-works-section.tsx` is the only file using `<style jsx>`; everything else is
   Tailwind + `globals.css`.
-- **The contact form does not send anything.** `submitContactForm()` at the top of
-  `components/contact/contact-form.tsx` awaits a timer and resolves. Everything else —
-  validation, the focusable error summary, all four states, the honeypot, the
-  localStorage draft — is real. The `TODO(backend):` block above it has paste-ready
-  bodies for both a Formspree endpoint and a `POST /api/contact` route handler. The
-  contract to preserve: it resolves on success and **throws** on failure; the error
-  state is driven by the throw. Server-side re-validation is still required (`zod` is
-  already a dependency).
+- **The contact form posts to a Google Apps Script web app**, because GitHub Pages has
+  no server and `output: 'export'` would drop an `app/api/**` route. The script —
+  `scripts/contact-apps-script.gs`, with its deployment steps in the header — appends
+  each submission to a Google Sheet and mails email@olvix.io. It re-validates every
+  field server side; client validation is only a UX affordance.
+  - **`CONTACT_ENDPOINT` at the top of `components/contact/contact-form.tsx` holds the
+    `/exec` URL.** While it is empty the form simulates a round trip in dev (so the
+    success state stays testable) and **throws in production**, which shows the error
+    state telling people to email directly — deliberately, rather than faking success
+    over a message that went nowhere.
+  - Two things will silently break it. The client must **not** set a `Content-Type`
+    header: a string body sends `text/plain;charset=UTF-8`, which is CORS safelisted, so
+    the browser skips the preflight OPTIONS that Apps Script cannot answer. And
+    ContentService **cannot set a status code** — every response is 200, so success is
+    read from `ok` in the body, not from `res.ok` alone. Never reach for
+    `mode: "no-cors"`; an opaque response can't be inspected, so every failure would
+    read as success.
+  - Editing the script does not update the live app. Deploy > Manage deployments >
+    pencil > **Version: New version**, which keeps the same URL.
+  - The contract to preserve: it resolves on success and **throws** on failure; the
+    error state is driven by the throw. Everything else — validation, the focusable
+    error summary, all four states, the honeypot, the localStorage draft — is real.
 - Status dots use literal `bg-green-500` / `bg-green-400` — the only non-token colors
   in the design.
 - **Reduced motion is honoured in two places and you need both.** `globals.css` has a

@@ -38,52 +38,82 @@ type Status = "idle" | "submitting" | "success" | "error";
 /* ==========================================================================
  * THE ONLY PLACE THIS PAGE TALKS TO A SERVER
  *
- * TODO(backend): nothing else in this file has to change when you wire this up.
- * Keep the signature (`ContactFormValues` in, resolve on success, THROW on
- * failure) and the idle / submitting / success / error states keep working.
+ * The site is a static export on GitHub Pages — there is no server here and an
+ * `app/api/**` route would not survive the build. The endpoint is a Google
+ * Apps Script web app that appends each submission to a Google Sheet and mails
+ * email@olvix.io. Free, no quota worth counting, and the data sits in an
+ * account we own. The script itself, and how to deploy it, is in
+ * `scripts/contact-apps-script.gs` — read that before changing anything here.
  *
- * Option 1 — third-party form service (Formspree, Basin, Web3Forms).
- * Recommended for launch: no backend, no secrets in the repo, one-file swap.
- *
- *   const res = await fetch("https://formspree.io/f/<FORM_ID>", {
- *     method: "POST",
- *     headers: { "Content-Type": "application/json", Accept: "application/json" },
- *     body: JSON.stringify(data),
- *   });
- *   if (!res.ok) throw new Error(`Contact endpoint responded ${res.status}`);
- *   return;
- *
- * Option 2 — own it: `app/api/contact/route.ts` + Resend or Postmark.
- *
- *   const res = await fetch("/api/contact", {
- *     method: "POST",
- *     headers: { "Content-Type": "application/json" },
- *     body: JSON.stringify(data),
- *   });
- *   if (!res.ok) throw new Error(`Contact endpoint responded ${res.status}`);
- *   return;
- *
- *   The route handler must re-validate server side (`zod` is already a
- *   dependency — client validation below is a UX affordance, not a control),
- *   send to the SHARED inbox email@olvix.io, and needs RESEND_API_KEY plus a
- *   verified sending domain on olvix.io.
- *
- * Either way also add Cloudflare Turnstile — the honeypot below is the free
- * 90%, not the whole answer.
- *
- * Until one of those exists this simulates a successful round trip so the
- * success state is reachable and testable. IT DOES NOT SEND ANYTHING.
+ * Paste the deployment's /exec URL below. It is not a secret: this file ships
+ * to the browser, so anything in it is public by construction. That is also
+ * why it is a plain constant and not NEXT_PUBLIC_CONTACT_ENDPOINT — an env var
+ * would buy no secrecy, and a static export bakes it in at build time either
+ * way, so it would only add a way for CI to ship a silently dead form.
  * ========================================================================== */
-async function submitContactForm(data: ContactFormValues): Promise<void> {
-  await new Promise((resolve) => {
-    setTimeout(resolve, 900);
-  });
+const CONTACT_ENDPOINT =
+  "https://script.google.com/macros/s/AKfycbzyhnAHErGTDrZE69oqXi5VECBPEqUrgqYzeKJ5F_LUHkzdeOAUUZfp-PGDGP8WGre09Q/exec";
 
-  if (process.env.NODE_ENV !== "production") {
+/**
+ * Resolves on success, THROWS on failure. Everything else in this file — all
+ * four states, the error summary, the draft — is built on that contract and
+ * needs no changes if the backend is ever swapped again.
+ */
+async function submitContactForm(data: ContactFormValues): Promise<void> {
+  if (!CONTACT_ENDPOINT) {
+    // Deployed with no endpoint: fail honestly. The error state tells people to
+    // email us directly, which is far better than a success screen over a
+    // message that went nowhere.
+    if (process.env.NODE_ENV === "production") {
+      throw new Error("CONTACT_ENDPOINT is not configured");
+    }
+    // Locally, keep the round trip simulated so the success state stays
+    // reachable without a deployment.
+    await new Promise((resolve) => {
+      setTimeout(resolve, 900);
+    });
     // eslint-disable-next-line no-console
     console.info(
-      "[contact] simulated submit — no backend is wired yet, nothing was sent",
+      "[contact] CONTACT_ENDPOINT is empty — simulated submit, nothing was sent",
       data,
+    );
+    return;
+  }
+
+  const res = await fetch(CONTACT_ENDPOINT, {
+    method: "POST",
+    // No Content-Type header, deliberately. Passing a string body makes fetch
+    // send `text/plain;charset=UTF-8`, which is CORS-safelisted, so the browser
+    // skips the preflight OPTIONS request — and Apps Script cannot answer one.
+    // Setting `application/json` here is the single most common way to break
+    // this integration; the failure looks like a generic CORS error.
+    body: JSON.stringify(data),
+    // Apps Script answers with a 302 across to script.googleusercontent.com.
+    // Following it is what makes the response readable: the final hop is the
+    // one carrying `Access-Control-Allow-Origin`. Never use `mode: "no-cors"`
+    // to silence this — an opaque response cannot be inspected, so every
+    // failure would read as a success and the throw contract above would be a
+    // lie.
+    redirect: "follow",
+  });
+
+  if (!res.ok) {
+    throw new Error(`Contact endpoint responded ${res.status}`);
+  }
+
+  // ContentService cannot set a status code — a rejected submission still comes
+  // back 200. The verdict is in the body, so an unparseable body (Apps Script
+  // renders its own HTML page when the script itself throws) is a failure too.
+  let payload: { ok?: boolean; error?: string };
+  try {
+    payload = JSON.parse(await res.text());
+  } catch {
+    throw new Error("Contact endpoint returned a non-JSON response");
+  }
+
+  if (!payload.ok) {
+    throw new Error(
+      payload.error ?? "Contact endpoint rejected the submission",
     );
   }
 }
@@ -126,7 +156,10 @@ const PROJECT_PLACEHOLDER =
 const CONSENT_LINE =
   "We'll only use this to reply to you. Nothing else, no list, no sharing.";
 
-const VALIDATION_MESSAGES: Record<"name" | "email" | "need" | "project", string> = {
+const VALIDATION_MESSAGES: Record<
+  "name" | "email" | "need" | "project",
+  string
+> = {
   name: "We need something to call you.",
   email: "That doesn't look like an email address.",
   need: "Pick the closest one — we'll figure out the rest on the call.",
@@ -209,8 +242,7 @@ const CONTROL =
   `placeholder:text-muted-foreground/70 transition-colors hover:border-foreground/25 ` +
   `focus-visible:border-foreground/40 aria-invalid:border-destructive ${FOCUS_RING}`;
 
-const LABEL =
-  "text-xs font-mono uppercase tracking-widest text-foreground/70";
+const LABEL = "text-xs font-mono uppercase tracking-widest text-foreground/70";
 
 const LINK =
   `underline underline-offset-4 decoration-foreground/30 hover:decoration-foreground ` +
@@ -294,7 +326,8 @@ export function ContactForm() {
       setValues((prev) => {
         const next = { ...prev };
         (Object.keys(EMPTY_VALUES) as FieldName[]).forEach((key) => {
-          if (typeof parsed[key] === "string") next[key] = parsed[key] as string;
+          if (typeof parsed[key] === "string")
+            next[key] = parsed[key] as string;
         });
         return next;
       });
@@ -488,7 +521,10 @@ export function ContactForm() {
           </h2>
           <p className="text-sm text-muted-foreground leading-relaxed">
             {FAILURE.bodyBefore}
-            <a href={`mailto:${FAILURE.email}`} className={`text-foreground ${LINK}`}>
+            <a
+              href={`mailto:${FAILURE.email}`}
+              className={`text-foreground ${LINK}`}
+            >
               {FAILURE.email}
             </a>
             {FAILURE.bodyAfter}
@@ -516,7 +552,9 @@ export function ContactForm() {
             onChange={(event) => setValue("name", event.target.value)}
             onBlur={() => handleBlur("name")}
             aria-invalid={errors.name ? true : undefined}
-            aria-describedby={errors.name ? `${FIELD_IDS.name}-error` : undefined}
+            aria-describedby={
+              errors.name ? `${FIELD_IDS.name}-error` : undefined
+            }
           />
           <FieldError id={`${FIELD_IDS.name}-error`} message={errors.name} />
         </div>
@@ -542,7 +580,9 @@ export function ContactForm() {
             onChange={(event) => setValue("email", event.target.value)}
             onBlur={() => handleBlur("email")}
             aria-invalid={errors.email ? true : undefined}
-            aria-describedby={errors.email ? `${FIELD_IDS.email}-error` : undefined}
+            aria-describedby={
+              errors.email ? `${FIELD_IDS.email}-error` : undefined
+            }
           />
           <FieldError id={`${FIELD_IDS.email}-error`} message={errors.email} />
         </div>
@@ -571,7 +611,10 @@ export function ContactForm() {
         {/* 4 · What do you need? */}
         <div>
           <div className="flex items-baseline justify-between gap-4 mb-3">
-            <span id={`${FIELD_IDS.need}-label`} className={`flex items-center gap-2 ${LABEL}`}>
+            <span
+              id={`${FIELD_IDS.need}-label`}
+              className={`flex items-center gap-2 ${LABEL}`}
+            >
               What do you need?
               <RequiredMark />
             </span>
@@ -581,7 +624,9 @@ export function ContactForm() {
             aria-labelledby={`${FIELD_IDS.need}-label`}
             aria-required="true"
             aria-invalid={errors.need ? true : undefined}
-            aria-describedby={errors.need ? `${FIELD_IDS.need}-error` : undefined}
+            aria-describedby={
+              errors.need ? `${FIELD_IDS.need}-error` : undefined
+            }
             value={values.need}
             onValueChange={(value) => setValue("need", value)}
             className="gap-3"
@@ -636,7 +681,10 @@ export function ContactForm() {
               errors.project ? `${FIELD_IDS.project}-error` : undefined
             }
           />
-          <FieldError id={`${FIELD_IDS.project}-error`} message={errors.project} />
+          <FieldError
+            id={`${FIELD_IDS.project}-error`}
+            message={errors.project}
+          />
         </div>
 
         {/* 6 · Timeline */}
@@ -664,7 +712,11 @@ export function ContactForm() {
             </SelectTrigger>
             <SelectContent className="rounded-none">
               {TIMELINE_OPTIONS.map((option) => (
-                <SelectItem key={option} value={option} className="rounded-none text-base">
+                <SelectItem
+                  key={option}
+                  value={option}
+                  className="rounded-none text-base"
+                >
                   {option}
                 </SelectItem>
               ))}
@@ -705,7 +757,11 @@ export function ContactForm() {
             </SelectTrigger>
             <SelectContent className="rounded-none">
               {BUDGET_OPTIONS.map((option) => (
-                <SelectItem key={option} value={option} className="rounded-none text-base">
+                <SelectItem
+                  key={option}
+                  value={option}
+                  className="rounded-none text-base"
+                >
                   {option}
                 </SelectItem>
               ))}
@@ -775,10 +831,7 @@ export function ContactForm() {
 
         <p className="mt-5 text-sm text-muted-foreground">
           Or email{" "}
-          <a
-            href="mailto:email@olvix.io"
-            className={`text-foreground ${LINK}`}
-          >
+          <a href="mailto:email@olvix.io" className={`text-foreground ${LINK}`}>
             email@olvix.io
           </a>{" "}
           directly.

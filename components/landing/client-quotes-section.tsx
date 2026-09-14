@@ -5,18 +5,25 @@
 // NOT the same thing as `testimonials-section.tsx`, which despite its filename is the
 // "Selected work" teaser for /portfolio.
 //
-// All four are REAL and verifiable, transcribed verbatim from docs/testimonials.md, and
-// they cover three different people: a LinkedIn recommendation for Talha, an Upwork
-// review for Adeen, and two freelance-platform reviews for Muhammad Nabeel. Each names
-// its source so a reader can go and check it.
+// All four are REAL and verifiable. Each card names its source — a LinkedIn
+// recommendation, an Upwork review, two freelance-platform reviews — so a reader can go
+// and check it. `docs/testimonials.md` holds the unedited originals.
 //
-// Where a reviewer is known only by a platform handle, the handle is what ships. That is
-// the honest presentation — it is what they chose to be known by, and it is what someone
-// verifying the review would search for. Do not "improve" a handle into a plausible full
-// name, and do not invent a job title to fill the empty `role`.
+// SQUARE BRACKETS MARK SUBSTITUTED WORDS. Two reviewers named the individual engineer
+// they worked with; the site credits the studio instead, so those words are bracketed —
+// "[Olvix]", "[them]" — which is the standard convention for altering a quotation.
+// This is not decoration. Mesut's recommendation is public on LinkedIn and Kostas's is
+// public on Upwork, so anyone can compare; the brackets are what keep an edited quote
+// honest rather than fabricated. If you change a quoted word, bracket it.
+//
+// Where a reviewer is known only by a platform handle, the handle is what ships. It is
+// what they chose to be known by and what someone verifying the review would search for.
+// Don't "improve" a handle into a plausible full name, and don't invent a job title to
+// fill an empty `role`.
 //
 // Two rules for anything added here:
-//   1. Verbatim only, and only with the reviewer's sign-off if it is not already public.
+//   1. Verbatim apart from bracketed substitutions, and only with the reviewer's
+//      sign-off if it is not already public.
 //   2. No invented metrics. Every number on this site has to be checkable.
 
 import { useEffect, useRef, useState } from "react";
@@ -27,7 +34,7 @@ import { useEffect, useRef, useState } from "react";
 const quotes = [
   {
     quote:
-      "Talha did a great job helping us to collect relevant data for our AI Solution. He has good hands on data research and data entry.",
+      "[Olvix] did a great job helping us to collect relevant data for our AI Solution. [They have] good hands on data research and data entry.",
     author: "Mesut Yilmaz",
     role: "Founder & CEO, STIA Systems GmbH",
     source: "LinkedIn · Nov 2025",
@@ -35,7 +42,7 @@ const quotes = [
   },
   {
     quote:
-      "Working with Adeen was a great experience — reliable, skilled, and easy to communicate with. I highly recommend him for any mobile app or React Native development needs.",
+      "Working with [Olvix] was a great experience — reliable, skilled, and easy to communicate with. I highly recommend [them] for any mobile app or React Native development needs.",
     author: "Kostas L.",
     source: "Upwork · Verified · Aug 2025",
     project: "Mobile app development in React Native.",
