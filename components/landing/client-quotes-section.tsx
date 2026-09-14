@@ -5,11 +5,15 @@
 // NOT the same thing as `testimonials-section.tsx`, which despite its filename is the
 // "Selected work" teaser for /portfolio.
 //
-// These are REAL and verifiable, transcribed verbatim from docs/testimonials.md — they
-// are freelance-platform reviews of Muhammad Nabeel's work, published with the reviewer
-// handle rather than an invented name and company. That is the honest presentation: the
-// handles are what the reviewers actually chose to be known by, and anyone can check
-// them on the platform. Do not "improve" a handle into a plausible full name.
+// All four are REAL and verifiable, transcribed verbatim from docs/testimonials.md, and
+// they cover three different people: a LinkedIn recommendation for Talha, an Upwork
+// review for Adeen, and two freelance-platform reviews for Muhammad Nabeel. Each names
+// its source so a reader can go and check it.
+//
+// Where a reviewer is known only by a platform handle, the handle is what ships. That is
+// the honest presentation — it is what they chose to be known by, and it is what someone
+// verifying the review would search for. Do not "improve" a handle into a plausible full
+// name, and do not invent a job title to fill the empty `role`.
 //
 // Two rules for anything added here:
 //   1. Verbatim only, and only with the reviewer's sign-off if it is not already public.
@@ -33,7 +37,7 @@ const quotes = [
     quote:
       "Working with Adeen was a great experience — reliable, skilled, and easy to communicate with. I highly recommend him for any mobile app or React Native development needs.",
     author: "Kostas L.",
-    source: "Verified · Aug 2025",
+    source: "Upwork · Verified · Aug 2025",
     project: "Mobile app development in React Native.",
   },
   {
